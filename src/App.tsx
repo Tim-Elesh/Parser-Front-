@@ -1,6 +1,6 @@
 import React from "react";
 import Graph from "./components/Graph";
-import Table from "./components/Table";
+import Table from "./components/Table/Table";
 import { transformData, RawData } from './utils/transformData';
 
 const App: React.FC = () => {
@@ -419,7 +419,6 @@ const App: React.FC = () => {
             "output_price": "6.66"
         }
     }
-    // Другие модели...
   };
 
   const tableData = transformData(rawData);
