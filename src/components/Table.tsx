@@ -1,87 +1,68 @@
 import React from 'react';
 import { useTable, Column } from 'react-table';
-
-interface TableData {
-  model: string;
-  provider: string;
-  input: string;
-  output: string;
-}
+import TableData from '../types/TableData';
 
 const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   const columns: Column<TableData>[] = React.useMemo(
     () => [
       {
         Header: 'Model',
-        accessor: 'model' as const,
+        accessor: 'model',
       },
       {
         Header: 'Provider',
-        accessor: 'provider' as const,
+        accessor: 'provider',
       },
       {
         Header: 'Input',
-        accessor: 'input' as const,
+        accessor: 'input',
       },
       {
         Header: 'Output',
-        accessor: 'output' as const,
+        accessor: 'output',
       },
     ],
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data });
 
   return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: 'solid 3px red',
-                  background: 'aliceblue',
-                  color: 'black',
-                  fontWeight: 'bold',
-                }}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
+    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+  <thead className="bg-gray-50">
+    {headerGroups.map(headerGroup => (
+      <tr {...headerGroup.getHeaderGroupProps()}>
+        {headerGroup.headers.map(column => (
+          <th
+            {...column.getHeaderProps()}
+            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            {column.render('Header')}
+          </th>
         ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td
-                  {...cell.getCellProps()}
-                  style={{
-                    padding: '10px',
-                    border: 'solid 1px gray',
-                    background: 'papayawhip',
-                  }}
-                >
-                  {cell.render('Cell')}
-                </td>
-              ))}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+      </tr>
+    ))}
+  </thead>
+  <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
+    {rows.map(row => {
+      prepareRow(row);
+      return (
+        <tr {...row.getRowProps()}>
+          {row.cells.map(cell => (
+            <td
+              {...cell.getCellProps()}
+              className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+            >
+              {cell.render('Cell')}
+            </td>
+          ))}
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
   );
 };
 
