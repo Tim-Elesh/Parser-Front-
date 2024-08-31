@@ -1,7 +1,5 @@
-import React, { PureComponent } from 'react';
 import data from '../data/data'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Period from './Period';
 
 export default function Graph() {
     return (
