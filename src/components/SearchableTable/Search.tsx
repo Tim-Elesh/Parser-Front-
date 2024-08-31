@@ -13,16 +13,16 @@ export default function Search({ onSearch }: SearchProps) {
     }, [query, onSearch]);
 
     return (
-        <div className='flex items-center gap-2 my-4 w-full'>
-            <label htmlFor="search" className='text-gray-500 w-full flex items-center gap-2 justify-center bg-gray-100 p-4 rounded-md'>
+        <div className='flex items-center my-4 w-full'>
+            <label htmlFor="search" className='relative text-gray-500 w-full flex items-center'>
                 <input
                     type="text"
                     placeholder="Search..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className='w-full md:w-1/2 lg:w-1/3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+                    className='w-full px-4 py-2 pl-10 pr-4 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white'
                 />
-                <FaSearch className='text-gray-500' />
+                <FaSearch className='absolute left-3 text-gray-400' />
             </label>
         </div>
     );

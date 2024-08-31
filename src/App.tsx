@@ -2,6 +2,7 @@ import React from "react";
 import Graph from "./components/Graph";
 import Table from "./components/Table/Table";
 import { transformData, RawData } from './utils/transformData';
+import Period from "./components/Period";
 
 const App: React.FC = () => {
   const rawData: RawData = {
@@ -426,6 +427,7 @@ const App: React.FC = () => {
   return (
     <div>
       <Graph />
+      <Period />
       <Table data={tableData} />
     </div>
   );
