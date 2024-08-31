@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const [data, setData] = useState([]);
 
 useEffect(() => {
-      fetch('http://145.249.249.29:3006/')
+      fetch('http://145.249.249.29:3006/avg')
             .then(response => response.json())
             .then(data => setData(data))
             .catch(error => console.error('Error fetching data:', error));

@@ -10,7 +10,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://145.249.249.29:3006');
+        const response = await fetch('http://145.249.249.29:3006/date/<YYYY-MM-DD>');
         const rawData: RawData = await response.json();
         const transformedData = transformData(rawData);
         setTableData(transformedData);
