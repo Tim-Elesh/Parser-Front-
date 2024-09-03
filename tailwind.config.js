@@ -1,11 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '1/8': '12.5%', // Добавляем кастомную ширину 10%
+
+      },
+    },
+
   },
   plugins: [],
 }

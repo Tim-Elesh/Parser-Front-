@@ -35,17 +35,24 @@ const Graph: React.FC = () => {
     }, []);
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" tickFormatter={formatDate} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="av_input_price" stroke="red" strokeWidth={3} />
-                <Line type="monotone" dataKey="av_output_price" stroke="#82ca9d" strokeWidth={3} />
-            </LineChart>
-        </ResponsiveContainer>
+        <div>
+            <ResponsiveContainer width="100%" height={600}>
+                <LineChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                    dataKey="date" 
+                    tickFormatter={formatDate} 
+                    tick={{ fontSize: 8 , angle: -90 }}
+                    textAnchor="end"
+                    />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="av_input_price" stroke="red" strokeWidth={3} />
+                    <Line type="monotone" dataKey="av_output_price" stroke="#82ca9d" strokeWidth={3} />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 };
 

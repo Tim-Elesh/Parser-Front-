@@ -13,7 +13,7 @@ export default function Search({ onSearch }: SearchProps) {
     }, [query, onSearch]);
 
     return (
-        <div className='flex items-center my-4 w-full'>
+        <div className='flex items-center my-5 w-full'>
             <label htmlFor="search" className='relative text-gray-500 w-full flex items-center'>
                 <input
                     type="text"
