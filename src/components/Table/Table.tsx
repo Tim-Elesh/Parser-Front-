@@ -84,11 +84,11 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()} className={isDark ? 'bg-gray-800' : 'bg-white'}>
-            {page.map(row => {
+            {page.map((row: any) => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}>
-                  {row.cells.map(cell => (
+                  {row.cells.map((cell: any) => (
                     <td
                       {...cell.getCellProps()}
                       className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}

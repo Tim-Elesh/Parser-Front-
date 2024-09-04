@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Graph from "../components/Graph";
 import Table from "../components/Table/Table";
 import { transformData, RawData } from '../utils/transformData';
@@ -6,7 +6,6 @@ import Period from "../components/Period";
 import ToggleThemeButton from "../components/ToggleThemeButton";
 
 const MainPage = () => {
-
   const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
 
   useEffect(() => {
@@ -39,17 +38,18 @@ const MainPage = () => {
     fetchData();
   }, []);
 
-
   return (
-    <>
-      <ToggleThemeButton />
+    <div>
+      <div className="absolute top-0 left-0 m-4">
+        <ToggleThemeButton />
+      </div>
       <div className="ml-14 flex flex-col justify-start">
         <Graph />
-        <Period />
+        <Period onPeriodChange={() => { }} />
         <Table data={tableData} />
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
 export default MainPage;

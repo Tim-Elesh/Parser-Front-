@@ -42,8 +42,9 @@ const Graph: React.FC = () => {
                     <XAxis 
                     dataKey="date" 
                     tickFormatter={formatDate} 
-                    tick={{ fontSize: 8 , angle: -90 }}
+                    tick={{ fontSize: 8 }} // Removed angle
                     textAnchor="end"
+                    transform="rotate(-90)" // Added transform for rotation
                     />
                     <YAxis />
                     <Tooltip />
