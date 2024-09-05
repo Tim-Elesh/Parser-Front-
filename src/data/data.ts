@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*import { useState, useEffect } from 'react';
 
 const [data, setData] = useState([]);
@@ -10,11 +11,20 @@ useEffect(() => {
 }, []);*/
 
 const data = [
+=======
+/*const data = [
+>>>>>>> 3053ff3 (create connection and sort)
       { date: '28.08.2024',input: '2.029861111111112',output: '4.872368055555553'},
       { date: '28.08.2024',input: '1.029861111111112',output: '6.872368055555553'},
       { date: '28.08.2024',input: '4.029861111111112',output: '3.872368055555553'},
       { date: '28.08.2024',input: '3.029861111111112',output: '5.872368055555553'},
+<<<<<<< HEAD
 ]
 
 
 export default data;
+=======
+
+      export defautl data;
+]*/
+>>>>>>> 3053ff3 (create connection and sort)

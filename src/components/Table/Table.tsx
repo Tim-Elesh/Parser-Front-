@@ -1,10 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { useTable, usePagination, Column } from 'react-table';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useTable, usePagination, useSortBy, Column } from 'react-table';
 import TableData from '../../types/TableData';
 import Search from '../SearchableTable/Search';
 
 const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    console.log('Table data:', data); // Лог для проверки данных
+  }, [data]);
 
   const filteredData = useMemo(() => {
     return data.filter(row =>
@@ -45,6 +49,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
       data: filteredData,
       initialState: { pageIndex: 0, pageSize: 10 },
     },
+    useSortBy,
     usePagination
   );
 
@@ -52,7 +57,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
     <div className="overflow-x-auto">
       <Search onSearch={(query) => setSearchQuery(query)} />
 
-      {/* Таблица */}
+      {/* Table */}
       <div className="min-w-full lg:w-full">
         <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -60,10 +65,17 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <th
-                    {...column.getHeaderProps()}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                     className="px-2 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
                     {column.render('Header')}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? ' 🔽'
+                          : ' 🔼'
+                        : ''}
+                    </span>
                   </th>
                 ))}
               </tr>
@@ -89,7 +101,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
         </table>
       </div>
 
-      {/* Пагинация */}
+      {/* Pagination */}
       <div className="pagination mt-4 flex flex-col sm:flex-row items-center justify-between">
         <div className="flex items-center mb-2 sm:mb-0">
           <button
@@ -122,9 +134,9 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
           </button>
         </div>
         <span className="text-sm text-gray-700 mb-2 sm:mb-0">
-          Страница{' '}
+          Page{' '}
           <strong className="font-medium">
-            {pageIndex + 1} из {pageOptions.length}
+            {pageIndex + 1} of {pageOptions.length}
           </strong>{' '}
         </span>
         <select
@@ -136,7 +148,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
         >
           {[10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
-              Показать {pageSize}
+              Show {pageSize}
             </option>
           ))}
         </select>
