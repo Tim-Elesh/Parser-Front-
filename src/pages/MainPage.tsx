@@ -3,10 +3,12 @@ import Graph from "../components/Graph";
 import Table from "../components/Table/Table";
 import { transformData, RawData } from '../utils/transformData';
 import Period from "../components/Period";
-import ToggleThemeButton from "../components/ToggleThemeButton";
+import ThemeButton from "../components/ThemeButton";
+import { useStore } from '../store/store';
 
 const MainPage = () => {
   const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
+  const theme = useStore((state: { theme: any; }) => state.theme);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,11 +41,11 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div>
-      <div className="absolute top-0 left-0 m-4">
-        <ToggleThemeButton />
+    <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+      <div>
+        <ThemeButton />
       </div>
-      <div className="ml-14 flex flex-col justify-start">
+      <div className="mx-14 flex flex-col justify-start">
         <Graph />
         <Period onPeriodChange={() => { }} />
         <Table data={tableData} />
