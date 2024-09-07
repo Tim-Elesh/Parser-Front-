@@ -14,5 +14,8 @@ export const createThemeSlice: StateCreator<
   ThemeSlice
 > = (set) => ({
   theme: 'light',
-  setTheme: (theme) => set({ theme }),
+  setTheme: (theme) => {
+    document.documentElement.setAttribute('color-scheme', theme);
+    set({ theme });
+  },
 });

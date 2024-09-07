@@ -1,16 +1,22 @@
+import React, { Suspense } from 'react';
 import { useState, useEffect } from "react";
-import Graph from "../components/Graph";
 import Table from "../components/Table/Table";
+import Loading from '../components/Loading';
 import { transformData, RawData } from '../utils/transformData';
-import Period from "../components/Period";
 import ThemeButton from "../components/ThemeButton";
 import { useStore } from '../store/store';
+import mockTableData from '../data/data'; // Импортируем мок-данные
+
+
+
+const Graph = React.lazy(() => import('../components/Graph'))
 
 const MainPage = () => {
-  const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
+  const [tableData, setTableData] = useState(mockTableData);
+  //const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]); -- For production
   const theme = useStore((state: { theme: any; }) => state.theme);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchData = async () => {
       try {
         console.log('Fetching data...'); // Лог для проверки выполнения запроса
@@ -38,7 +44,7 @@ const MainPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, []); */
 
   return (
     <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
@@ -46,8 +52,9 @@ const MainPage = () => {
         <ThemeButton />
       </div>
       <div className="mx-14 flex flex-col justify-start">
-        <Graph />
-        <Period onPeriodChange={() => { }} />
+        <Suspense fallback={<Loading />}>
+          <Graph />
+        </Suspense>
         <Table data={tableData} />
       </div>
     </div>

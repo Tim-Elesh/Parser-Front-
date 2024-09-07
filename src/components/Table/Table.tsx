@@ -10,16 +10,40 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   const theme = useStore((state: { theme: any; }) => state.theme);
 
   useEffect(() => {
-    console.log('Table data:', data); // Лог для проверки данных
+    console.log('Table data:', data);
   }, [data]);
 
+  // Функция для поиска дубликатов
+  const findDuplicates = (data: TableData[]) => {
+    const duplicates: Record<string, TableData[]> = {};
+    const uniqueData: TableData[] = [];
+
+    data.forEach(row => {
+      const key = `${row.model}`;
+
+      if (!duplicates[key]) {
+        duplicates[key] = [];
+        uniqueData.push(row);
+      }
+
+      duplicates[key].push(row);
+    });
+
+    return {
+      duplicates: Object.values(duplicates).filter(group => group.length > 1),
+      uniqueData,
+    };
+  };
+
+  const { duplicates, uniqueData } = useMemo(() => findDuplicates(data), [data]);
+
   const filteredData = useMemo(() => {
-    return data.filter(row =>
+    return uniqueData.filter(row =>
       Object.values(row).some(value =>
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-  }, [data, searchQuery]);
+  }, [uniqueData, searchQuery]);
 
   const columns: Column<TableData>[] = useMemo(
     () => [
@@ -59,11 +83,11 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   return (
     <div className="overflow-x-auto">
       <Search onSearch={(query) => setSearchQuery(query)} />
-  
+
       {/* Table */}
       <div className="min-w-full lg:w-full">
-        <table {...getTableProps()} className={`min-w-full divide-y ${ theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
-          <thead className={`${theme === 'dark'? 'bg-black' : 'bg-gray-50'}`}>
+        <table {...getTableProps()} className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
+          <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-50'}`}>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
@@ -100,11 +124,41 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                 </tr>
               );
             })}
-            <Accordion />
+
+            {/* Accordion для отображения дубликатов */}
+            {duplicates.map((duplicateGroup, index) => (
+              <React.Fragment key={index}>
+                <tr>
+                  <td colSpan={columns.length}>
+                    {/* Передаем название группы как название модели */}
+                    <Accordion title={`Group: ${duplicateGroup[0].model}`}>
+                      {duplicateGroup.map((item, subIndex) => (
+                        <tr key={subIndex} className="light:bg-white dark:bg-black dark:text-white text-sm flex gap-48">
+                          <td className="pl-6 pr-[24%] w-full flex gap-12 justify-between py-4 whitespace-nowrap hover:bg-gray-100">
+                            <tr>
+                              {item.model}
+                            </tr>
+                            <tr>
+                              {item.provider}
+                            </tr>
+                            <tr>
+                              {item.input}
+                            </tr>
+                            <tr>
+                              {item.output}
+                            </tr>
+                          </td>
+                        </tr>
+                      ))}
+                    </Accordion>
+                  </td>
+                </tr>
+              </React.Fragment>
+            ))}
           </tbody>
         </table>
       </div>
-  
+
       {/* Pagination */}
       <div className="pagination mt-4 flex flex-col sm:flex-row items-center justify-between">
         <div className="flex items-center mb-2 sm:mb-0">
@@ -158,9 +212,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
         </select>
       </div>
     </div>
-  );  
+  );
 };
 
 export default Table;
-
-
