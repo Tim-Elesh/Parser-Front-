@@ -134,7 +134,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                     <Accordion title={`Group: ${duplicateGroup[0].model}`}>
                       {duplicateGroup.map((item, subIndex) => (
                         <tr key={subIndex} className="light:bg-white dark:bg-black dark:text-white text-sm flex gap-48">
-                          <td className="pl-6 pr-[24%] w-full flex gap-12 justify-between py-4 whitespace-nowrap hover:bg-gray-100">
+                          <td className="pl-6 pr-[24%] w-full flex gap-12 justify-between py-4 whitespace-nowrap hover:bg-gray-100 duration-200">
                             <tr>
                               {item.model}
                             </tr>
