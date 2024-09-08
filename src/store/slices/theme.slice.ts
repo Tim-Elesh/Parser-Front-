@@ -12,10 +12,16 @@ export const createThemeSlice: StateCreator<
   [],
   [],
   ThemeSlice
-> = (set) => ({
-  theme: 'light',
-  setTheme: (theme) => {
-    document.documentElement.setAttribute('color-scheme', theme);
-    set({ theme });
-  },
-});
+> = (set) => {
+  const savedTheme = localStorage.getItem('theme') as Theme; // Check localStorage for saved theme
+  const initialTheme: Theme = savedTheme || 'light'; // Default to 'light' if none found
+
+  return {
+    theme: initialTheme,
+    setTheme: (theme) => {
+      document.documentElement.setAttribute('color-scheme', theme);
+      localStorage.setItem('theme', theme); // Save theme to localStorage
+      set({ theme });
+    },
+  };
+};

@@ -48,16 +48,16 @@ const MainPage = () => {
 
   return (
     <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
-      <div>
-        <ThemeButton />
-      </div>
-      <div className="mx-14 flex flex-col justify-start">
-        <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading />}>
+        <div>
+          <ThemeButton />
+        </div>
+        <div className="mx-14 flex flex-col justify-start">
           <Graph />
-        </Suspense>
-        <Table data={tableData} />
-      </div>
-    </div>
+          <Table data={tableData} />
+        </div>
+      </Suspense>
+    </div >
   );
 }
 
