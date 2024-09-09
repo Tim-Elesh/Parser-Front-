@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useStore } from '../store/store'; // Импортируйте ваш провайдер темы
 
 // Функция для форматирования даты
 const formatDate = (dateString: string) => {
@@ -16,6 +17,7 @@ const formatDate = (dateString: string) => {
 
 const Graph: React.FC = () => {
     const [data, setData] = useState([]);
+    const  theme  = useStore((state: { theme: any; }) => state.theme); // Получите текущую тему
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,7 +49,10 @@ const Graph: React.FC = () => {
                     transform="rotate(-90)" // Added transform for rotation
                     />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip contentStyle={{ 
+                        backgroundColor: theme === 'dark' ? 'black' : 'white', 
+                        color: theme === 'dark' ? 'white' : 'black' 
+                    }} /> // Изменен стиль подсказки в зависимости от темы
                     <Legend />
                     <Line type="monotone" dataKey="av_input_price" stroke="red" strokeWidth={3} />
                     <Line type="monotone" dataKey="av_output_price" stroke="#82ca9d" strokeWidth={3} />

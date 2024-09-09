@@ -24,7 +24,11 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
       {/* Контент Accordion, который раскрывается/сворачивается */}
       {isOpen && (
         <>
-          {children} {/* Дочерние элементы теперь будут отображаться как строки таблицы */}
+          <tr>
+            <td colSpan={4} className="px-5 py-4 text-sm flex flex-col gap-6">
+              {children} {/* Дочерние элементы теперь будут отображаться как строки таблицы */}
+            </td>
+          </tr>
         </>
       )}
     </>

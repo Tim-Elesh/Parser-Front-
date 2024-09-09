@@ -13,7 +13,6 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
     console.log('Table data:', data);
   }, [data]);
 
-  // Функция для поиска дубликатов
   const findDuplicates = (data: TableData[]) => {
     const duplicates: Record<string, TableData[]> = {};
     const uniqueData: TableData[] = [];
@@ -45,6 +44,25 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
     );
   }, [uniqueData, searchQuery]);
 
+  // Combine filtered data with duplicates for pagination
+  const combinedData = useMemo(() => {
+    const dataWithDuplicates = [...filteredData];
+
+    duplicates.forEach(duplicateGroup => {
+      // Добавляем только одну строку для группы
+      dataWithDuplicates.push({
+        model: `Group: ${duplicateGroup[0].model}`,
+        provider: '',
+        input: '',
+        output: '',
+        isGroup: true, // Помечаем как группу для рендеринга
+        groupItems: duplicateGroup, // Храним элементы группы
+      });
+    });
+
+    return dataWithDuplicates;
+  }, [filteredData, duplicates]);
+
   const columns: Column<TableData>[] = useMemo(
     () => [
       { Header: 'Model', accessor: 'model' },
@@ -73,7 +91,7 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   } = useTable(
     {
       columns,
-      data: filteredData,
+      data: combinedData,
       initialState: { pageIndex: 0, pageSize: 10 },
     },
     useSortBy,
@@ -84,7 +102,6 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
     <div className="overflow-x-auto">
       <Search onSearch={(query) => setSearchQuery(query)} />
 
-      {/* Table */}
       <div className="min-w-full lg:w-full">
         <table {...getTableProps()} className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
           <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-50'}`}>
@@ -112,49 +129,42 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
             {page.map((row: any) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} className={`${theme === 'dark' ? "hover:bg-gray-200 duration-200" : "hover:bg-gray-100 duration-200"}`}>
-                  {row.cells.map((cell: any) => (
-                    <td
-                      {...cell.getCellProps()}
-                      className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${theme === 'dark' ? "text-white hover:text-gray-900" : "text-gray-900"}`}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  ))}
-                </tr>
+                <React.Fragment key={row.id}>
+                  {/* Проверяем, является ли строка группой */}
+                  {row.original.isGroup ? (
+                    <React.Fragment>
+                      <tr>
+                        <td colSpan={columns.length}>
+                          <Accordion title={row.original.model}>
+                            {row.original.groupItems.map((item, subIndex) => (
+                              <div key={subIndex} className="py-2">
+                                <div className="flex justify-between gap-6">
+                                  <span>{item.model}</span>
+                                  <span>{item.provider}</span>
+                                  <span>{item.input}</span>
+                                  <span>{item.output}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </Accordion>
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  ) : (
+                    <tr {...row.getRowProps()} className={`${theme === 'dark' ? "hover:bg-gray-200 duration-200" : "hover:bg-gray-100 duration-200"}`}>
+                      {row.cells.map((cell: any) => (
+                        <td
+                          {...cell.getCellProps()}
+                          className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${theme === 'dark' ? "text-white hover:text-gray-900" : "text-gray-900"}`}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      ))}
+                    </tr>
+                  )}
+                </React.Fragment>
               );
             })}
-
-            {/* Accordion для отображения дубликатов */}
-            {duplicates.map((duplicateGroup, index) => (
-              <React.Fragment key={index}>
-                <tr>
-                  <td colSpan={columns.length}>
-                    {/* Передаем название группы как название модели */}
-                    <Accordion title={`Group: ${duplicateGroup[0].model}`}>
-                      {duplicateGroup.map((item, subIndex) => (
-                        <tr key={subIndex} className="light:bg-white dark:bg-black dark:text-white text-sm flex gap-48">
-                          <td className="pl-6 pr-[24%] w-full flex gap-12 justify-between py-4 whitespace-nowrap hover:bg-gray-100 duration-200">
-                            <tr>
-                              {item.model}
-                            </tr>
-                            <tr>
-                              {item.provider}
-                            </tr>
-                            <tr>
-                              {item.input}
-                            </tr>
-                            <tr>
-                              {item.output}
-                            </tr>
-                          </td>
-                        </tr>
-                      ))}
-                    </Accordion>
-                  </td>
-                </tr>
-              </React.Fragment>
-            ))}
           </tbody>
         </table>
       </div>

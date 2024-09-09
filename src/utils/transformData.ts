@@ -19,13 +19,16 @@ export const transformData = (data: RawData): TableData[] => {
     data[model].forEach((entry) => {
       for (const provider in entry) {
         if (provider !== "date") {
-          const [input, output] = entry[provider].split("/");
-          result.push({
-            model,
-            provider,
-            input,
-            output,
-          });
+          const value = entry[provider];
+          if (value) { // Check if value is not null or undefined
+            const [input, output] = value.split("/");
+            result.push({
+              model,
+              provider,
+              input,
+              output,
+            });
+          }
         }
       }
     });
@@ -34,4 +37,3 @@ export const transformData = (data: RawData): TableData[] => {
   return result;
 };
 
-  

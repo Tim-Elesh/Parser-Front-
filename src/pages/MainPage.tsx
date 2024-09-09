@@ -5,18 +5,17 @@ import Loading from '../components/Loading';
 import { transformData, RawData } from '../utils/transformData';
 import ThemeButton from "../components/ThemeButton";
 import { useStore } from '../store/store';
-import mockTableData from '../data/data'; // Импортируем мок-данные
 
 
 
 const Graph = React.lazy(() => import('../components/Graph'))
 
 const MainPage = () => {
-  const [tableData, setTableData] = useState(mockTableData);
-  //const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]); -- For production
+  //const [tableData, setTableData] = useState(mockTableData); -- Moc data
+  const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
   const theme = useStore((state: { theme: any; }) => state.theme);
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         console.log('Fetching data...'); // Лог для проверки выполнения запроса
@@ -44,7 +43,7 @@ const MainPage = () => {
     };
 
     fetchData();
-  }, []); */
+  }, []);
 
   return (
     <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
