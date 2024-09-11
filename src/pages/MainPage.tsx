@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { useState, useEffect } from "react";
 import Table from "../components/Table/Table";
 import Loading from '../components/Loading';
+import GraphHeader from '../components/GraphHeader';
 import { transformData, RawData } from '../utils/transformData';
 import ThemeButton from "../components/ThemeButton";
 import { useStore } from '../store/store';
@@ -48,10 +49,8 @@ const MainPage = () => {
   return (
     <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <Suspense fallback={<Loading />}>
-        <div>
-          <ThemeButton />
-        </div>
         <div className="mx-14 flex flex-col justify-start">
+          <GraphHeader />
           <Graph />
           <Table data={tableData} />
         </div>

@@ -13,7 +13,7 @@ const ThemeToggleButton = () => {
   return (
     <button
       onClick={toggleTheme}
-      className={` p-2.5 rounded ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'} cursor-pointer`}
+      className={` p-3 rounded ${theme === 'dark' ? 'bg-gray-950 text-white' : 'bg-white text-black'} cursor-pointer`}
     >
       {theme === 'dark' ? <FaSun /> : <FaMoon />}
     </button>
