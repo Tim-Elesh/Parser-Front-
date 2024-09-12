@@ -4,10 +4,16 @@ import TableData from '../../types/TableData';
 import Search from '../SearchableTable/Search';
 import Accordion from '../Accordion';
 import { useStore } from '../../store/store';
+import { FaArrowUp } from "react-icons/fa";
+import { FaArrowDown } from "react-icons/fa";
+import { FaArrowsAltV } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 
 const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const theme = useStore((state: { theme: any; }) => state.theme);
+  const [isOpen, setIsOpen] = useState(false); // Добавлено состояние для управления открытием группы
+  const [openGroupIndex, setOpenGroupIndex] = useState<number | null>(null); // Изменено для отслеживания открытой группы
 
   useEffect(() => {
     console.log('Table data:', data);
@@ -112,14 +118,16 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     className={`px-2 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? "text-white" : "text-gray-500"}`}
                   >
-                    {column.render('Header')}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
-                    </span>
+                    <div className="flex items-center"> {/* Обернуто в flex для выравнивания */}
+                      {column.render('Header')}
+                      <span className="text-gray-500 ml-2"> {/* Увеличено расстояние между заголовком и стрелочками */}
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? <FaArrowDown />
+                            : <FaArrowUp />
+                          : <FaArrowsAltV />}
+                      </span>
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -134,9 +142,10 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                   {row.original.isGroup ? (
                     <React.Fragment>
                       <tr>
-                        <td colSpan={columns.length}>
+                        <td className='flex items-center cursor-pointer' onClick={() => setOpenGroupIndex(openGroupIndex === row.index ? null : row.index)} colSpan={columns.length}> {/* Изменено для управления открытием конкретной группы */}
                           <Accordion title={row.original.model}>
-                            {row.original.groupItems.map((item, subIndex) => (
+                            {/* Условие для отображения элементов группы только при открытии */}
+                            {openGroupIndex === row.index && row.original.groupItems.map((item, subIndex) => ( // Изменено для проверки открытой группы
                               <div key={subIndex} className="py-2">
                                 <div className="flex justify-between gap-6">
                                   <span>{item.model}</span>
@@ -147,6 +156,9 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                               </div>
                             ))}
                           </Accordion>
+                          <span className="ml-2"> {/* Увеличено расстояние между стрелочкой и названием группы */}
+                            {openGroupIndex === row.index ? <FaArrowDown /> : <FaArrowRight />} {/* Изменено для отображения стрелочки только для открытой группы */}
+                          </span>
                         </td>
                       </tr>
                     </React.Fragment>

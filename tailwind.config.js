@@ -8,6 +8,9 @@ export default {
 
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'],
+      },
       width: {
         '1/8': '12.5%', // Добавляем кастомную ширину 10%
 
