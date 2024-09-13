@@ -51,8 +51,10 @@ const MainPage = () => {
       <Suspense fallback={<Loading />}>
         <div className="mx-14 flex flex-col justify-start">
           <GraphHeader />
-          <Graph />
-          <Table data={tableData} />
+          <div className='flex'>
+            <Graph />
+            <Table data={tableData} />
+          </div>
         </div>
       </Suspense>
     </div >
