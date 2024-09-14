@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { useStore } from '../../store/store';
 
 type SearchProps = {
     onSearch: (query: string) => void;
+    initialQuery?: string; // Добавим возможность задать начальный поиск
 };
 
-export default function Search({ onSearch }: SearchProps) {
-    const [query, setQuery] = useState('');
+export default function Search({ onSearch, initialQuery = '' }: SearchProps) {
+    const [query, setQuery] = useState(initialQuery);
     const theme = useStore((state: { theme: any; }) => state.theme);
 
     useEffect(() => {

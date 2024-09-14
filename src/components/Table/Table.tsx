@@ -1,16 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTable, usePagination, useSortBy, Column } from 'react-table';
 import TableData from '../../types/TableData';
-import Search from '../SearchableTable/Search';
 import Accordion from '../Accordion';
 import { useStore } from '../../store/store';
-import { FaArrowUp } from "react-icons/fa";
-import { FaArrowDown } from "react-icons/fa";
-import { FaArrowsAltV } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaArrowsAltV, FaArrowRight } from "react-icons/fa";
+import Pagination from '../Pagination';
 
-const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , searchQuery }) => {
   const theme = useStore((state: { theme: any; }) => state.theme);
   const [isOpen, setIsOpen] = useState(false); // Добавлено состояние для управления открытием группы
   const [openGroupIndex, setOpenGroupIndex] = useState<number | null>(null); // Изменено для отслеживания открытой группы
@@ -106,7 +102,6 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
 
   return (
     <div className="overflow-x-auto">
-      <Search onSearch={(query) => setSearchQuery(query)} />
 
       <div className="min-w-full lg:w-full">
         <table {...getTableProps()} className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
@@ -148,10 +143,10 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
                             {openGroupIndex === row.index && row.original.groupItems.map((item, subIndex) => ( // Изменено для проверки открытой группы
                               <div key={subIndex} className="py-2">
                                 <div className="flex justify-between gap-6">
-                                  <span>{item.model}</span>
-                                  <span>{item.provider}</span>
-                                  <span>{item.input}</span>
-                                  <span>{item.output}</span>
+                                  <span className='w-1/5'>{item.model}</span>
+                                  <span className='w-1/5'>{item.provider}</span>
+                                  <span className='w-1/5'>{item.input}</span>
+                                  <span className='w-1/5'>{item.output}</span>
                                 </div>
                               </div>
                             ))}
@@ -182,57 +177,18 @@ const Table: React.FC<{ data: TableData[] }> = ({ data }) => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination mt-4 flex flex-col sm:flex-row items-center justify-between">
-        <div className="flex items-center mb-2 sm:mb-0">
-          <button
-            onClick={() => gotoPage(0)}
-            disabled={!canPreviousPage}
-            className={`px-3 py-1 rounded-md ${theme === 'dark' ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-700"} mr-2 disabled:opacity-50`}
-          >
-            {'<<'}
-          </button>
-          <button
-            onClick={() => previousPage()}
-            disabled={!canPreviousPage}
-            className={`px-3 py-1 rounded-md ${theme === 'dark' ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-700"} mr-2 disabled:opacity-50`}
-          >
-            {'<'}
-          </button>
-          <button
-            onClick={() => nextPage()}
-            disabled={!canNextPage}
-            className={`px-3 py-1 rounded-md ${theme === 'dark' ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-700"} mr-2 disabled:opacity-50`}
-          >
-            {'>'}
-          </button>
-          <button
-            onClick={() => gotoPage(pageCount - 1)}
-            disabled={!canNextPage}
-            className={`px-3 py-1 rounded-md ${theme === 'dark' ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-700"} mr-2 disabled:opacity-50`}
-          >
-            {'>>'}
-          </button>
-        </div>
-        <span className={`text-sm ${theme === 'dark' ? "text-white" : "text-gray-700"} mb-2 sm:mb-0`}>
-          Page{' '}
-          <strong className="font-medium">
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
-        </span>
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-          className={`mt-2 sm:mt-0 block w-full sm:w-auto px-3 py-1 ${theme === 'dark' ? "bg-black border-gray-800" : "bg-white border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Pagination
+        gotoPage={gotoPage}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        pageCount={pageCount}
+        pageIndex={pageIndex}
+        pageOptions={pageOptions}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+      />
     </div>
   );
 };

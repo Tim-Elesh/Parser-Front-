@@ -85,7 +85,7 @@ const Graph = () => {
 
   return (
     <div className='-ml-12'>
-      <ReactApexChart options={options} series={series} type="line" height={400} />
+      <ReactApexChart options={options} series={series} type="line" height={400} width={450}/>
     </div>
   );
 };
