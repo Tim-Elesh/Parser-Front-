@@ -6,6 +6,7 @@ import Search from '../components/SearchableTable/Search';
 import { transformData, RawData } from '../utils/transformData';
 import ThemeButton from "../components/ThemeButton";
 import { useStore } from '../store/store';
+import Period from '../components/Period';
 
 const Graph = React.lazy(() => import('../components/Graph'))
 
@@ -43,15 +44,16 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-max mt-[5%] ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <Suspense fallback={<Loading />}>
         <div className="mx-14 flex flex-col justify-start">
           <GraphHeader />
           <Search onSearch={setSearchQuery} /> {/* Добавляем компонент Search в MainPage */}
-          <div className='flex justify-around h-1/2 w-full'>
+          <div className='flex flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around h-1/2 w-full'>
             <Graph />
             <Table data={tableData} searchQuery={searchQuery} /> {/* Передаем searchQuery в Table */}
           </div>
+          <Period />
         </div>
       </Suspense>
     </div>

@@ -6,7 +6,7 @@ import { useStore } from '../../store/store';
 import { FaArrowUp, FaArrowDown, FaArrowsAltV, FaArrowRight } from "react-icons/fa";
 import Pagination from '../Pagination';
 
-const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , searchQuery }) => {
+const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, searchQuery }) => {
   const theme = useStore((state: { theme: any; }) => state.theme);
   const [isOpen, setIsOpen] = useState(false); // Добавлено состояние для управления открытием группы
   const [openGroupIndex, setOpenGroupIndex] = useState<number | null>(null); // Изменено для отслеживания открытой группы
@@ -102,20 +102,20 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , 
 
   return (
     <div className="overflow-x-auto">
-
-      <div className="min-w-full lg:w-full">
-        <table {...getTableProps()} className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
+  
+      <div className="min-w-full lg:w-full h-96 overflow-y-auto">
+        <table {...getTableProps()} className={`min-w-full table-fixed divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
           <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-50'}`}>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={`px-2 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? "text-white" : "text-gray-500"}`}
+                    className={`w-1/4 px-2 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? "text-white" : "text-gray-500"}`}
                   >
-                    <div className="flex items-center"> {/* Обернуто в flex для выравнивания */}
+                    <div className="flex items-center">
                       {column.render('Header')}
-                      <span className="text-gray-500 ml-2"> {/* Увеличено расстояние между заголовком и стрелочками */}
+                      <span className="text-gray-500 ml-2">
                         {column.isSorted
                           ? column.isSortedDesc
                             ? <FaArrowDown />
@@ -133,14 +133,12 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , 
               prepareRow(row);
               return (
                 <React.Fragment key={row.id}>
-                  {/* Проверяем, является ли строка группой */}
                   {row.original.isGroup ? (
                     <React.Fragment>
                       <tr>
-                        <td className='flex items-center cursor-pointer' onClick={() => setOpenGroupIndex(openGroupIndex === row.index ? null : row.index)} colSpan={columns.length}> {/* Изменено для управления открытием конкретной группы */}
+                        <td className='flex items-center cursor-pointer' onClick={() => setOpenGroupIndex(openGroupIndex === row.index ? null : row.index)} colSpan={columns.length}>
                           <Accordion title={row.original.model}>
-                            {/* Условие для отображения элементов группы только при открытии */}
-                            {openGroupIndex === row.index && row.original.groupItems.map((item, subIndex) => ( // Изменено для проверки открытой группы
+                            {openGroupIndex === row.index && row.original.groupItems.map((item, subIndex) => (
                               <div key={subIndex} className="py-2">
                                 <div className="flex justify-between gap-6">
                                   <span className='w-1/5'>{item.model}</span>
@@ -151,8 +149,8 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , 
                               </div>
                             ))}
                           </Accordion>
-                          <span className="ml-2"> {/* Увеличено расстояние между стрелочкой и названием группы */}
-                            {openGroupIndex === row.index ? <FaArrowDown /> : <FaArrowRight />} {/* Изменено для отображения стрелочки только для открытой группы */}
+                          <span className="ml-2">
+                            {openGroupIndex === row.index ? <FaArrowDown /> : <FaArrowRight />}
                           </span>
                         </td>
                       </tr>
@@ -175,8 +173,7 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , 
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
+  
       <Pagination
         gotoPage={gotoPage}
         previousPage={previousPage}
@@ -191,6 +188,8 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string;  }> = ({ data , 
       />
     </div>
   );
+  
+
 };
 
 export default Table;
