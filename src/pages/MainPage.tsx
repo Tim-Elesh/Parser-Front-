@@ -44,7 +44,7 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className={`min-h-max mt-[5%] ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <Suspense fallback={<Loading />}>
         <div className="mx-14 flex flex-col justify-start">
           <GraphHeader />
