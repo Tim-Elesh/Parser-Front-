@@ -28,32 +28,22 @@ const Faq: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem' }}>
-      <h2>Часто задаваемые вопросы</h2>
+    <div className="max-w-xl mx-auto p-4">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Часто задаваемые вопросы</h2>
       {faqData.map((item, index) => (
-        <div key={index} style={{ marginBottom: '10px', border: '1px solid #ccc', borderRadius: '5px' }}>
+        <div key={index} className="mb-4 border border-gray-300 rounded-lg shadow-sm">
           <div
             onClick={() => toggleExpanded(index)}
-            style={{
-              cursor: 'pointer',
-              padding: '10px',
-              backgroundColor: '#f9f9f9',
-              fontWeight: 'bold',
-            }}
+            className="cursor-pointer p-4 bg-gray-100 hover:bg-gray-200 transition-colors duration-300 rounded-t-lg font-bold text-gray-700"
           >
             {item.question}
           </div>
           <div
-            style={{
-              maxHeight: expandedIndex === index ? '200px' : '0',
-              overflow: 'hidden',
-              transition: 'max-height 0.3s ease-in-out',
-              backgroundColor: '#fff',
-            }}
+            className={`overflow-hidden transition-max-height duration-300 ease-in-out ${
+              expandedIndex === index ? 'max-h-40' : 'max-h-0'
+            } bg-white text-gray-800 rounded-b-lg`}
           >
-            <div style={{ padding: '10px' }}>
-              {expandedIndex === index ? item.answer : null}
-            </div>
+            <div className="p-4">{item.answer}</div>
           </div>
         </div>
       ))}

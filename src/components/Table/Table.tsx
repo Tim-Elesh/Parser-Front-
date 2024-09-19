@@ -1,9 +1,8 @@
 import React, { useMemo, useEffect } from 'react';
 import { useTable, usePagination, useSortBy, Column, TableInstance, UseSortByColumnProps, ColumnInstance } from 'react-table';
 import TableData from '../../types/TableData';
-/*import Accordion from '../Accordion';*/
 import { useStore } from '../../store/store';
-import { FaArrowUp, FaArrowDown, FaArrowsAltV} from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaArrowsAltV } from "react-icons/fa";
 import Pagination from '../Pagination';
 
 // Extend TableData to include properties for grouping
@@ -14,7 +13,6 @@ interface GroupedTableData extends TableData {
 
 // Extend TableInstance for pagination
 type TableInstanceWithPagination<T extends object> = TableInstance<T> & {
-  // Pagination props and state
   page: Array<{ id: string; original: T; getRowProps: () => any; prepareRow: (row: any) => void; cells: Array<any>; }>;
   canPreviousPage: boolean;
   canNextPage: boolean;
@@ -32,7 +30,6 @@ type ColumnWithSorting<T extends object> = ColumnInstance<T> & UseSortByColumnPr
 
 const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, searchQuery }) => {
   const theme = useStore((state: { theme: any; }) => state.theme);
-  {/*const [openGroupIndex, setOpenGroupIndex] = useState<number | null>(null);*/}
 
   useEffect(() => {
     console.log('Table data:', data);
@@ -59,7 +56,7 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
     };
   };
 
-  const { duplicates, uniqueData } = useMemo(() => findDuplicates(data), [data]);
+  const { uniqueData } = useMemo(() => findDuplicates(data), [data]);
 
   const filteredData = useMemo(() => {
     return uniqueData.filter(row =>
@@ -69,23 +66,9 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
     );
   }, [uniqueData, searchQuery]);
 
-  // Combine filtered data with duplicates for pagination
   const combinedData = useMemo(() => {
-    const dataWithDuplicates = [...filteredData];
-
-    duplicates.forEach(duplicateGroup => {
-      dataWithDuplicates.push({
-        model: `Group: ${duplicateGroup[0].model}`,
-        provider: '',
-        input: '',
-        output: '',
-        isGroup: true,
-        groupItems: duplicateGroup,
-      });
-    });
-
-    return dataWithDuplicates;
-  }, [filteredData, duplicates]);
+    return filteredData; // Используем только уникальные и отфильтрованные данные
+  }, [filteredData]);
 
   const columns: Column<GroupedTableData>[] = useMemo(
     () => [
@@ -156,46 +139,16 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
             {page.map((row: any) => {
               prepareRow(row);
               return (
-                <React.Fragment key={row.id}>
-                  {/* Закомментий код, связанный с группами */}
-                  {/*
-                  {row.original.isGroup ? (
-                    <React.Fragment>
-                      <tr>
-                        <td className='flex flex-col items-center cursor-pointer' onClick={() => setOpenGroupIndex(openGroupIndex === row.index ? null : row.index)} colSpan={columns.length}>
-                          <Accordion title={row.original.model}>
-                            {openGroupIndex === row.index && row.original.groupItems.map((item: any, subIndex: any) => (
-                              <div key={subIndex} className="py-2">
-                                <div className="flex justify-between gap-6">
-                                  <span className='w-1/5'>{item.model}</span>
-                                  <span className='w-1/5'>{item.provider}</span>
-                                  <span className='w-1/5'>{item.input}</span>
-                                  <span className='w-1/5'>{item.output}</span>
-                                </div>
-                              </div>
-                            ))}
-                          </Accordion>
-                          <span className="ml-2">
-                            {openGroupIndex === row.index ? <FaArrowDown /> : <FaArrowRight />}
-                          </span>
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  ) : (
-                  */}
-                  <tr {...row.getRowProps()} className={`${theme === 'dark' ? "hover:bg-gray-200 duration-200" : "hover:bg-gray-100 duration-200"}`}>
-                    {row.cells.map((cell: any) => (
-                      <td
-                        {...cell.getCellProps()}
-                        className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${theme === 'dark' ? "text-white hover:text-gray-900" : "text-gray-900"}`}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                  {/* Закрытие комментария после секции с группами */}
-                  {/* )} */}
-                </React.Fragment>
+                <tr {...row.getRowProps()} className={`${theme === 'dark' ? "hover:bg-gray-200 duration-200" : "hover:bg-gray-100 duration-200"}`}>
+                  {row.cells.map((cell: any) => (
+                    <td
+                      {...cell.getCellProps()}
+                      className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${theme === 'dark' ? "text-white hover:text-gray-900" : "text-gray-900"}`}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  ))}
+                </tr>
               );
             })}
           </tbody>
