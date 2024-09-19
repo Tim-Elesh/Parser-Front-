@@ -4,9 +4,9 @@ import Loading from '../components/Loading';
 import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
 import { transformData, RawData } from '../utils/transformData';
-import ThemeButton from "../components/ThemeButton";
 import { useStore } from '../store/store';
 import Period from '../components/Period';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const Graph = React.lazy(() => import('../components/Graph'))
 
@@ -48,10 +48,14 @@ const MainPage = () => {
       <Suspense fallback={<Loading />}>
         <div className="mx-14 flex flex-col justify-start">
           <GraphHeader />
-          <Search onSearch={setSearchQuery} /> {/* Добавляем компонент Search в MainPage */}
+          <Search onSearch={setSearchQuery} />
           <div className='flex flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around h-1/2 w-full'>
-            <Graph />
-            <Table data={tableData} searchQuery={searchQuery} /> {/* Передаем searchQuery в Table */}
+            <ErrorBoundary>
+              <Graph />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Table data={tableData} searchQuery={searchQuery} />
+            </ErrorBoundary>
           </div>
           <Period />
         </div>

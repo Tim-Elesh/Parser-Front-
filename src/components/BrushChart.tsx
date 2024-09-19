@@ -23,7 +23,8 @@ const BrushChart: React.FC<BrushChartProps> = ({ series, theme }) => {
     xaxis: {
       type: 'datetime',
       labels: {
-        formatter: function (val: number) {
+        formatter: function (value: string) {
+          const val = Number(value); // Convert string to number
           const date = new Date(val);
           const options = {
             day: '2-digit',
@@ -32,7 +33,7 @@ const BrushChart: React.FC<BrushChartProps> = ({ series, theme }) => {
             hour: '2-digit',
             minute: '2-digit',
           };
-          return date.toLocaleDateString('en-GB', options).replace(',', '');
+          return date.toLocaleDateString('en-GB', options as Intl.DateTimeFormatOptions).replace(',', '');
         },
         style: {
           colors: theme === 'dark' ? '#fff' : '#000',

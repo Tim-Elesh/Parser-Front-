@@ -1,11 +1,19 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
 import { useStore } from '../store/store';
-import BrushChart from './BrushChart';
 
-const formatDate = (dateString) => {
+// Define the type for data items
+interface DataItem {
+  date: string;
+  av_input_price: number;
+  av_output_price: number;
+}
+
+// Function to format date strings
+const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
-  const options = {
+  const options: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: 'short',
     year: '2-digit',
@@ -16,8 +24,8 @@ const formatDate = (dateString) => {
 };
 
 const Graph = () => {
-  const [data, setData] = useState([]);
-  const theme = useStore((state) => state.theme);
+  const [data, setData] = useState<DataItem[]>([]);
+  const theme = useStore((state: { theme: string }) => state.theme);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +34,7 @@ const Graph = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+        const data: DataItem[] = await response.json();
         setData(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -39,24 +47,34 @@ const Graph = () => {
   const series = useMemo(() => [
     {
       name: 'Average Input Price',
-      data: data.map((item) => ({ x: new Date(item.date).getTime(), y: item.av_input_price })),
+      data: data.map((item) => ({
+        x: new Date(item.date).getTime(),
+        y: item.av_input_price
+      })),
     },
     {
       name: 'Average Output Price',
-      data: data.map((item) => ({ x: new Date(item.date).getTime(), y: item.av_output_price })),
+      data: data.map((item) => ({
+        x: new Date(item.date).getTime(),
+        y: item.av_output_price
+      })),
     },
   ], [data]);
 
-  const options = {
+  const options: ApexOptions = {
     chart: {
-      type: 'line',
+      id: 'main-chart',
+      type: 'line' as const,
       background: theme === 'dark' ? '#000' : '#fff',
     },
     xaxis: {
       type: 'datetime',
       labels: {
-        formatter: function (val) {
-          return formatDate(new Date(val));
+        formatter: function(value: string, timestamp?: number): string {
+          if (timestamp) {
+            return formatDate(new Date(timestamp).toISOString());
+          }
+          return value; // fallback to the original value if timestamp is not provided
         },
         style: {
           colors: theme === 'dark' ? '#fff' : '#000',
@@ -75,7 +93,7 @@ const Graph = () => {
       width: 3,
     },
     tooltip: {
-      theme: theme,
+      theme: theme === 'dark' ? 'dark' : 'light',
     },
     legend: {
       labels: {
@@ -87,7 +105,7 @@ const Graph = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="w-full max-w-4xl mb-4">
-        {series.length > 0 ? (
+        {series[0].data.length > 0 ? (
           <ReactApexChart options={options} series={series} type="line" height={400} />
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500 text-lg font-semibold">
@@ -95,7 +113,6 @@ const Graph = () => {
           </div>
         )}
       </div>
-      {series.length > 0 && <BrushChart series={series} theme={theme} />}
     </div>
   );
 };
