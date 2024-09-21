@@ -5,7 +5,7 @@
 ## Для того чтобы запустить проект нужно ввести команды
    #### git clone https://github.com/Tim-Elesh/Parser-Front-.git
    #### npm i
-   #### npm run dev
+   #### npx serve dist
 
 ## Структура проекта и компоненты:
 ###  Graph.tsx - График который отображает цены на output & input , в нём же содержится логика обработки данных для графика 
