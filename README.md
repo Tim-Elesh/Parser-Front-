@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Этот шаблон предоставляет минимальную настройку для работы с React в Vite с поддержкой горячей перезагрузки модулей (HMR) и некоторыми правилами ESLint.
 
-Currently, two official plugins are available:
+В настоящее время доступны два официальных плагина:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    @vitejs/plugin-react использует Babel для Fast Refresh.
+    @vitejs/plugin-react-swc использует SWC для Fast Refresh.
 
-## Expanding the ESLint configuration
+Расширение конфигурации ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Если вы разрабатываете приложение для продакшена, мы рекомендуем обновить конфигурацию, чтобы включить правила линтинга, учитывающие типы:
 
-- Configure the top-level `parserOptions` property like this:
+    Настройте свойство parserOptions на верхнем уровне следующим образом:
 
-```js
+js
+
 export default tseslint.config({
   languageOptions: {
-    // other options...
+    // другие параметры...
     parserOptions: {
       project: ['./tsconfig.node.json', './tsconfig.app.json'],
       tsconfigRootDir: import.meta.dirname,
     },
   },
 })
-```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+    Замените tseslint.configs.recommended на tseslint.configs.recommendedTypeChecked или tseslint.configs.strictTypeChecked.
+    При желании добавьте ...tseslint.configs.stylisticTypeChecked.
+    Установите eslint-plugin-react и обновите конфигурацию:
 
-```js
+js
+
 // eslint.config.js
-import react from 'eslint-plugin-react'
+import react from 'eslint-plugin-react';
 
 export default tseslint.config({
-  // Set the react version
+  // Укажите версию React
   settings: { react: { version: '18.3' } },
   plugins: {
-    // Add the react plugin
+    // Добавьте плагин react
     react,
   },
   rules: {
-    // other rules...
-    // Enable its recommended rules
+    // другие правила...
+    // Включите рекомендуемые правила
     ...react.configs.recommended.rules,
     ...react.configs['jsx-runtime'].rules,
   },
-})
-```
+});
+
+Структура проекта и компоненты:
+  Graph.tsx - График который отображает цены на output & input , в нём же содержится логика обработки данных для графика 
+  Table.tsx - Таблица с моделям, провайдерами моделей , цены на input, цены на output, в этой же таблице содержится логика для обработки данных и их отображения
+  MainPage.tsx - Содержит в себе  Graph.tsx Table.tsx 
+  HomePage.tsx - Стартовая страница которая встречает пользователя
