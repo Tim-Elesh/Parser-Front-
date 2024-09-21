@@ -7,6 +7,10 @@
    #### npm i
    #### npm run dev
 
+
+
+
+
 В настоящее время доступны два официальных плагина:
 
     @vitejs/plugin-react использует Babel для Fast Refresh.
