@@ -44,9 +44,9 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className={`min-h-max ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
       <Suspense fallback={<Loading />}>
-        <div className="mx-14 flex flex-col justify-start">
+        <div className="mx-14 flex flex-col justify-start w-full">
           <GraphHeader />
           <Search onSearch={setSearchQuery} />
           <div className='flex flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around h-1/2 w-full'>
@@ -62,6 +62,6 @@ const MainPage = () => {
       </Suspense>
     </div>
   );
-}
+} 
 
 export default MainPage;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useStore } from '../store/store';  // Добавлено для доступа к теме
 
 type FAQItem = {
   question: string;
@@ -22,26 +23,29 @@ const faqData: FAQItem[] = [
 
 const Faq: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const theme = useStore((state: { theme: string }) => state.theme);  // Получаем текущую тему
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Часто задаваемые вопросы</h2>
+    <div className="max-w-2xl mx-auto p-4">
+      <h2 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+        Часто задаваемые вопросы
+      </h2>
       {faqData.map((item, index) => (
-        <div key={index} className="mb-4 border border-gray-300 rounded-lg shadow-sm">
+        <div key={index} className={`mb-4 border rounded-lg shadow-sm ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'}`}>
           <div
             onClick={() => toggleExpanded(index)}
-            className="cursor-pointer p-4 bg-gray-100 hover:bg-gray-200 transition-colors duration-300 rounded-t-lg font-bold text-gray-700"
+            className={`cursor-pointer p-4 transition-colors duration-300 rounded-t-lg font-bold ${theme === 'dark' ? 'bg-gray-800 hover:bg-gray-700 text-gray-100' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
           >
             {item.question}
           </div>
           <div
             className={`overflow-hidden transition-max-height duration-300 ease-in-out ${
               expandedIndex === index ? 'max-h-40' : 'max-h-0'
-            } bg-white text-gray-800 rounded-b-lg`}
+            } ${theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'} rounded-b-lg`}
           >
             <div className="p-4">{item.answer}</div>
           </div>

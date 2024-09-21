@@ -1,19 +1,17 @@
-import React, { useMemo, useEffect } from 'react';
-import { useTable, usePagination, useSortBy, Column, TableInstance, UseSortByColumnProps, ColumnInstance } from 'react-table';
+import { useMemo, useEffect } from 'react';
+import { useTable, usePagination, useSortBy, Column, Row, HeaderGroup, TableInstance, TableState } from 'react-table';
 import TableData from '../../types/TableData';
 import { useStore } from '../../store/store';
 import { FaArrowUp, FaArrowDown, FaArrowsAltV } from "react-icons/fa";
 import Pagination from '../Pagination';
 
-// Extend TableData to include properties for grouping
 interface GroupedTableData extends TableData {
   isGroup?: boolean;
   groupItems?: TableData[];
 }
 
-// Extend TableInstance for pagination
 type TableInstanceWithPagination<T extends object> = TableInstance<T> & {
-  page: Array<{ id: string; original: T; getRowProps: () => any; prepareRow: (row: any) => void; cells: Array<any>; }>;
+  page: Array<Row<T>>;
   canPreviousPage: boolean;
   canNextPage: boolean;
   pageOptions: number[];
@@ -22,11 +20,8 @@ type TableInstanceWithPagination<T extends object> = TableInstance<T> & {
   nextPage: () => void;
   previousPage: () => void;
   setPageSize: (size: number) => void;
-  state: { pageIndex: number; pageSize: number; };
+  state: { pageIndex: number; pageSize: number };
 };
-
-// Extend ColumnInstance for sorting
-type ColumnWithSorting<T extends object> = ColumnInstance<T> & UseSortByColumnProps<T>;
 
 const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, searchQuery }) => {
   const theme = useStore((state: { theme: any; }) => state.theme);
@@ -67,10 +62,10 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
   }, [uniqueData, searchQuery]);
 
   const combinedData = useMemo(() => {
-    return filteredData; // Используем только уникальные и отфильтрованные данные
+    return filteredData; 
   }, [filteredData]);
 
-  const columns: Column<GroupedTableData>[] = useMemo(
+  const columns: Column<TableData>[] = useMemo(
     () => [
       { Header: 'Model', accessor: 'model' },
       { Header: 'Provider', accessor: 'provider' },
@@ -99,7 +94,7 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
     {
       columns,
       data: combinedData,
-      initialState: { pageIndex: 0, pageSize: 10 },
+      initialState: { pageIndex: 0, pageSize: 10 } as Partial<TableState<GroupedTableData> & { pageIndex: number; pageSize: number }>,
     },
     useSortBy,
     usePagination
@@ -108,12 +103,12 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
   return (
     <div className="overflow-x-auto">
       <div className="min-w-full lg:w-full h-96 overflow-y-auto">
-        <table {...getTableProps()} className={`min-w-full table-fixed divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
+        <table {...getTableProps()} className={`w-full table-fixed divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
           <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-50'}`}>
-            {headerGroups.map(headerGroup => (
+            {headerGroups.map((headerGroup: HeaderGroup<GroupedTableData>) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => {
-                  const sortingColumn = column as ColumnWithSorting<GroupedTableData>;
+                  const sortingColumn = column as Column<GroupedTableData> & UseSortByColumnProps<GroupedTableData>;
                   return (
                     <th
                       {...sortingColumn.getHeaderProps(sortingColumn.getSortByToggleProps())}
@@ -136,11 +131,11 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
             ))}
           </thead>
           <tbody {...getTableBodyProps()} className={`${theme === 'dark' ? "bg-black" : "bg-white"}`}>
-            {page.map((row: any) => {
+            {page.map((row: Row<GroupedTableData>) => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()} className={`${theme === 'dark' ? "hover:bg-gray-200 duration-200" : "hover:bg-gray-100 duration-200"}`}>
-                  {row.cells.map((cell: any) => (
+                  {row.cells.map(cell => (
                     <td
                       {...cell.getCellProps()}
                       className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm ${theme === 'dark' ? "text-white hover:text-gray-900" : "text-gray-900"}`}
