@@ -30,7 +30,7 @@ const MainPage = () => {
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
 
-        const response = await fetch(`http://127.0.0.1:2020/date/${formattedDate}`);
+        const response = await fetch(`http://145.249.249.29:3006/date/${formattedDate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
