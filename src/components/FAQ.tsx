@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useStore } from '../store/store';  // Добавлено для доступа к теме
+import { useStore } from '../store/store';
+import { Link } from 'react-router-dom';
 
 type FAQItem = {
   question: string;
@@ -21,17 +22,17 @@ const faqData: FAQItem[] = [
   },
 ];
 
-const Faq: React.FC = () => {
+const FAQ: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const theme = useStore((state: { theme: string }) => state.theme);  // Получаем текущую тему
+  const theme = useStore((state: { theme: string }) => state.theme);
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h2 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+    <div className="max-w-2xl w-full px-4 mx-auto">
+      <h2 className={`text-xl md:text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
         Часто задаваемые вопросы
       </h2>
       {faqData.map((item, index) => (
@@ -51,8 +52,11 @@ const Faq: React.FC = () => {
           </div>
         </div>
       ))}
+          <Link to="/main" className="flex w-full items-center text-center justify-center px-4 py-4 mt-4 bg-blue-500 text-white  rounded hover:bg-blue-600 duration-300">
+            Go to Main Page
+          </Link>
     </div>
   );
 };
 
-export default Faq;
+export default FAQ;
