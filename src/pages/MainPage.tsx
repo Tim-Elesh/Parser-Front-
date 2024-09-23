@@ -8,6 +8,8 @@ import { useStore } from '../store/store';
 import Period from '../components/Period';
 import ErrorBoundary from '../components/ErrorBoundary';
 
+//zabil build sobrat'
+
 const Graph = React.lazy(() => import('../components/Graph'))
 
 const MainPage = () => {
