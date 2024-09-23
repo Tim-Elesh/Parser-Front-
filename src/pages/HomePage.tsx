@@ -3,7 +3,7 @@ import FAQComponent from '../components/FAQ'; // Make sure to update the path as
 
 const HomePage = () => {
     return (
-        <div className={`flex w-full flex-col items-center justify-center h-screen dark:bg-black light:bg-gray-100`}>
+        <div className={`flex w-full flex-col items-center justify-center h-screen dark:bg-black dark:text-white light:bg-gray-100 light:text-black`}>
             <h1 className="text-5xl font-bold mb-4">Welcome to UIGraph</h1>
             <div className="mt-8 w-full px-4">
                 <FAQComponent />

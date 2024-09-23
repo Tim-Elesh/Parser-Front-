@@ -28,20 +28,28 @@ const Graph = () => {
   const theme = useStore((state: { theme: string }) => state.theme);
 
   useEffect(() => {
+    let isMounted = true; // флаг для отслеживания состояния монтирования
+
     const fetchData = async () => {
       try {
         const response = await fetch('http://145.249.249.29:3006/avg');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data: DataItem[] = await response.json();
-        setData(data);
+        const data = await response.json();
+        if (isMounted) { // проверка на монтирование компонента
+          setData(data);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false; // обновляем флаг при размонтировании
+    };
   }, []);
 
   const series = useMemo(() => [

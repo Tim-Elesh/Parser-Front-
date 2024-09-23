@@ -16,6 +16,8 @@ const MainPage = () => {
   const theme = useStore((state: { theme: any; }) => state.theme);
 
   useEffect(() => {
+    let isMounted = true; // флаг для отслеживания состояния монтирования
+
     const fetchData = async () => {
       try {
         console.log('Fetching data...');
@@ -30,17 +32,26 @@ const MainPage = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const rawData: RawData = await response.json();
+
+        const rawData = await response.json();
         console.log('Raw data:', rawData);
+
         const transformedData = transformData(rawData);
         console.log('Transformed data:', transformedData);
-        setTableData(transformedData);
+
+        if (isMounted) { // проверка на монтирование компонента
+          setTableData(transformedData);
+        }
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false; // обновляем флаг при размонтировании
+    };
   }, []);
 
   return (
