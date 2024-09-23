@@ -1,5 +1,4 @@
 import MainPage from "./pages/MainPage";
-import HomePage from "./pages/HomePage"
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useStore } from './store/store';
@@ -15,8 +14,7 @@ const App: React.FC = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/main" element={<MainPage />} />
+          <Route path="/" element={<MainPage />} />
         </Routes>
       </BrowserRouter>
     </>
