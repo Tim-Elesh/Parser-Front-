@@ -3,7 +3,7 @@ import Table from "../components/Table/Table";
 import Loading from '../components/Loading';
 import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
-import { transformData, RawData } from '../utils/transformData';
+import { transformData } from '../utils/transformData';
 import { useStore } from '../store/store';
 import Period from '../components/Period';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -30,7 +30,7 @@ const MainPage = () => {
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
 
-        const response = await fetch(`http://145.249.249.29:3006/date/${formattedDate}`);
+        const response = await fetch(`http://127.0.0.1:3006/date/${formattedDate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
