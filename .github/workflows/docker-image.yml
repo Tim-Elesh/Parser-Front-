@@ -34,9 +34,11 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
-      - name: Convert repository name to lowercase
+      - name: Convert repository name to lowercase and remove invalid characters
         id: lowercase_repo
-        run: echo "LOWERCASE_REPO=$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: |
+          LOWERCASE_REPO=$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]-_')
+          echo "LOWERCASE_REPO=${LOWERCASE_REPO}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         id: push
