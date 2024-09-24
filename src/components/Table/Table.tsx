@@ -114,11 +114,11 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
                   return (
                     <th
                       {...sortingColumn.getHeaderProps(sortingColumn.getSortByToggleProps())}
-                      className={`w-1/4 px-2 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? "text-white" : "text-gray-500"}`}
+                      className={`w-1/4 px-1 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? "text-white" : "text-gray-500"}`}
                     >
                       <div className="flex items-center">
                         {sortingColumn.render('Header')}
-                        <span className="text-gray-500 ml-2">
+                        <span className="text-gray-500 ml-0 sm:ml-2 md:ml-2 lg:ml-2 xl:ml-2 2xl:ml-2">
                           {sortingColumn.isSorted
                             ? sortingColumn.isSortedDesc
                               ? <FaArrowDown />
