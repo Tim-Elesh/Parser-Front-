@@ -111,8 +111,8 @@ const Graph = () => {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="w-full max-w-4xl mb-4">
+    <div className="flex flex-col w-full xl:w-1/2 2xl:w-1/2">
+      <div className="w-full lg:w-full lg:max-w-xl xl:w-full xl:max-w-2xl 2xl:w-full 2xl:max-w-3xl mb-4">
         {series[0].data.length > 0 ? (
           <ReactApexChart options={options} series={series} type="line" height={400} />
         ) : (
