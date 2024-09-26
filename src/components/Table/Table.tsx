@@ -103,9 +103,9 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
   ) as TableInstanceWithPagination<GroupedTableData>;
 
   return (
-    <div className="overflow-x-auto">
-      <div className="min-w-full lg:w-full h-96 overflow-y-auto">
-        <table {...getTableProps()} className={`w-full table-fixed divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
+    <div className="overflow-x-hidden">
+      <div className="min-w-full lg:w-full xl:w-2xl 2xl:w-1/2 h-96 overflow-y-auto">
+        <table {...getTableProps()} className={`max-[768px]:w-full lg:w-full lg:max-w-2xl xl:w-full xl:max-w-3xl 2xl:w-full 2xl:max-w-4xl table-fixed divide-y ${theme === 'dark' ? 'divide-gray-700 bg-dark text-white' : 'divide-gray-200 bg-white text-black'}`}>
           <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-50'}`}>
             {headerGroups.map((headerGroup: HeaderGroup<GroupedTableData>) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
