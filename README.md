@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
+## React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Этот шаблон предоставляет минимальную настройку для работы с React в Vite с поддержкой горячей перезагрузки модулей (HMR) и некоторыми правилами ESLint.
 
-Currently, two official plugins are available:
+## Для того чтобы запустить проект нужно ввести команды
+   #### git clone --branch production https://github.com/Tim-Elesh/Parser-Front-.git - клонирование репозитория на локальный компьютер.
+   #### cd <название_проекта> - переход в директорию проекта.
+   #### npm i - установка всех зависимостей, указанных в проекте (если они нужны для запуска сервера).
+   #### npm install -g http-server - глобальная установка статического сервера http-server для раздачи файлов.
+   #### http-server dist - запуск сервера serve для раздачи файлов из директории dist
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Структура проекта и компоненты:
+###  Graph.tsx - График который отображает цены на output & input , в нём же содержится логика обработки данных для графика 
 ```
+30-45 line
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://145.249.249.29:3006/avg');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: DataItem[] = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+    fetchData();
+  }, []);
 ```
+###  Table.tsx - Таблица с моделям, провайдерами моделей , цены на input, цены на output
+###  MainPage.tsx - Содержит в себе  Graph.tsx Table.tsx , тут содержится логика обработки данных для таблицы
+```
+  18-41 line
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log('Fetching data...');
+
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const response = await fetch(`http://145.249.249.29:3006/date/${formattedDate}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const rawData: RawData = await response.json();
+        console.log('Raw data:', rawData);
+        const transformedData = transformData(rawData);
+        console.log('Transformed data:', transformedData);
+        setTableData(transformedData);
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
+    };
+```
+###  HomePage.tsx - Стартовая страница которая встречает пользователя
