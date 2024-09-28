@@ -30,7 +30,7 @@ const MainPage = () => {
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
 
-        const response = await fetch(`http://127.0.0.1:3006/date/${formattedDate}`);
+        const response = await fetch(`https://tivi.aitomaton.online/date/${formattedDate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

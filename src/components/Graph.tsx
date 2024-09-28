@@ -32,7 +32,7 @@ const Graph = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:3006/avg');
+        const response = await fetch('https://tivi.aitomaton.online/avg');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
