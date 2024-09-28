@@ -1,11 +1,9 @@
 import { useMemo, useEffect } from 'react';
-import { useTable, usePagination, useSortBy, Column, Row, HeaderGroup, TableInstance, TableState } from 'react-table';
+import { useTable, usePagination, useSortBy, Column, Row, HeaderGroup, TableInstance } from 'react-table';
 import TableData from '../../types/TableData';
 import { useStore } from '../../store/store';
 import { FaArrowUp, FaArrowDown, FaArrowsAltV } from "react-icons/fa";
 import Pagination from '../Pagination';
-
-//comment 2
 
 interface GroupedTableData extends TableData {
   isGroup?: boolean;
@@ -96,7 +94,8 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; }> = ({ data, se
     {
       columns,
       data: combinedData,
-      initialState: { pageIndex: 0, pageSize: 10 } as Partial<TableState<GroupedTableData> & { pageIndex: number; pageSize: number }>,
+      initialState: { pageIndex: 0, pageSize: 10 }, // Дополнительно добавленный multiSort после настройки
+      disableMultiSort: false, // Включение многоколоночной сортировки
     },
     useSortBy,
     usePagination
