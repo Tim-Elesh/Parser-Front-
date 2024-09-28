@@ -1,4 +1,5 @@
-FROM node:14
+# Используем официальный образ Node.js с нужной версией
+FROM node:16
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -15,10 +16,8 @@ COPY . .
 # Выполняем сборку проекта
 RUN npm run build
 
-# Устанавливаем глобально http-server
 RUN npm install -g http-server
 
-# Открываем порт 8080
 EXPOSE 8080
 
 # Запускаем http-server для раздачи файлов из директории dist
