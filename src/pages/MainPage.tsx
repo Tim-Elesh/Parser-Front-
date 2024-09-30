@@ -61,14 +61,12 @@ const MainPage = () => {
       <Suspense fallback={<Loading />}>
         <div className="mx-0 sm:mx-10 md:mx-10 lg:mx-12 xl:mx-14 2xl:mx-14 flex flex-col justify-start w-full">
           <GraphHeader />
-          <Search onSearch={setSearchQuery} />
           <div className='flex flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around h-1/2 w-full'>
-            <ErrorBoundary>
               <Graph />
-            </ErrorBoundary>
-            <ErrorBoundary>
-              <Table data={tableData} searchQuery={searchQuery} />
-            </ErrorBoundary>
+              <div>
+                <Search onSearch={setSearchQuery} />
+                <Table data={tableData} searchQuery={searchQuery} />
+              </div>
           </div>
           <Period />
         </div>

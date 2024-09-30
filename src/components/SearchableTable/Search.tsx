@@ -16,7 +16,7 @@ export default function Search({ onSearch, initialQuery = '' }: SearchProps) {
     }, [query, onSearch]);
 
     return (
-        <div className={`flex items-center my-5 w-full ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+        <div className={`flex items-center w-full ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
             <label htmlFor="search" className="relative w-full z-10 flex items-center">
                 <input
                     type="text"
