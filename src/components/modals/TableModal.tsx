@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaTimes } from 'react-icons/fa';
+import {Button, Box} from '@mui/joy';
 
 interface ModalProps {
     isOpen: boolean;
@@ -11,16 +12,34 @@ const TableModal: React.FC<ModalProps> = ({isOpen , onClose}) => {
 
     return(
         <>
-         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded relative">
-                <button 
+         <Box sx={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+         }}>
+            <Box sx={{bgcolor: 'white', p: 6, position: 'relative'}}>
+                <Button
                 onClick={onClose}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                sx={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  color: 'grey.500',
+                  '&:hover': {
+                    color: 'grey.700',
+                  },
+                }}
                 >
                   <FaTimes />
-                </button>
-              </div>
-          </div>
+                </Button>
+              </Box>
+          </Box>
         </>
     )
 }

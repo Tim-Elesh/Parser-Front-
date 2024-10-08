@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import { useStore } from '../store/store';
+import Box from '@mui/joy/Box';
+import { useColorScheme } from '@mui/joy/styles';
 
 // Define the type for data items
 interface DataItem {
@@ -25,7 +26,8 @@ const formatDate = (dateString: string): string => {
 
 const Graph = () => {
   const [data, setData] = useState<DataItem[]>([]);
-  const theme = useStore((state: { theme: string }) => state.theme);
+  const  palette  = useColorScheme();
+  const isDarkMode = palette?.mode === 'dark';
 
   useEffect(() => {
     let isMounted = true; // флаг для отслеживания состояния монтирования
@@ -34,7 +36,12 @@ const Graph = () => {
       try {
         const response = await fetch('https://tivi.aitomaton.online/avg/');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! div
+          div
+          div
+          div
+          div
+          divstatus: ${response.status}`);
         }
         const data = await response.json();
         if (isMounted) { // проверка на монтирование компонента
@@ -73,26 +80,26 @@ const Graph = () => {
     chart: {
       id: 'main-chart',
       type: 'line' as const,
-      background: theme === 'dark' ? '#000' : '#fff',
+      background: isDarkMode ? '#000' : '#fff',
     },
     xaxis: {
       type: 'datetime',
       labels: {
-        formatter: function(value: string, timestamp?: number): string {
+        formatter: function (value: string, timestamp?: number): string {
           if (timestamp) {
             return formatDate(new Date(timestamp).toISOString());
           }
           return value; // fallback to the original value if timestamp is not provided
         },
         style: {
-          colors: theme === 'dark' ? '#fff' : '#000',
+          colors: isDarkMode ? '#fff' : '#000',
         },
       },
     },
     yaxis: {
       labels: {
         style: {
-          colors: theme === 'dark' ? '#fff' : '#000',
+          colors: isDarkMode ? '#fff' : '#000',
         },
       },
     },
@@ -101,27 +108,55 @@ const Graph = () => {
       width: 3,
     },
     tooltip: {
-      theme: theme === 'dark' ? 'dark' : 'light',
+      theme: isDarkMode ? 'dark' : 'light',
     },
     legend: {
       labels: {
-        colors: theme === 'dark' ? '#fff' : '#000',
+        colors: isDarkMode ? '#fff' : '#000',
       },
     },
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-1/2 2xl:w-1/2">
-      <div className="w-full lg:w-full lg:max-w-xl xl:w-full xl:max-w-2xl 2xl:w-full 2xl:max-w-3xl mb-4">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%', // for `w-full`
+        '@media (min-width: 1280px)': {
+          width: '50%',
+        },
+        '@media (min-width: 1536px)': {
+          width: '50%',
+        },
+      }}
+      className="flex flex-col w-full xl:w-1/2 2xl:w-1/2">
+      <Box
+        sx={{
+
+        }}
+      //className="w-full lg:w-full lg:max-w-xl xl:w-full xl:max-w-2xl 2xl:w-full 2xl:max-w-3xl mb-4"
+      >
         {series[0].data.length > 0 ? (
           <ReactApexChart options={options} series={series} type="line" height={500} />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 text-lg font-semibold">
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: 'grey.500',
+              fontSize: '1.125rem',
+              lineHeight: '1.75rem',
+              fontWeight: '600'
+            }}
+          >
             No data available
-          </div>
+          </Box>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

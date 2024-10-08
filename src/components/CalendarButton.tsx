@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaCalendar } from "react-icons/fa";
-import { useStore } from "../store/store";
+import { Button, Box } from '@mui/joy';
 
 const CalendarButton = () => {
-    const theme = useStore((state: { theme: any; }) => state.theme);
-
     return (
-        <div>
-            <button className={` p-3 rounded ${theme === 'dark' ? 'bg-gray-950 text-white' : 'bg-white text-black'} cursor-pointer`}>
+        <Box>
+            <Button className={` p-3 rounded bg-white text-black cursor-pointer`}>
                 <FaCalendar />
-            </button>
-        </div>
+            </Button>
+        </Box>
     )
 }
 

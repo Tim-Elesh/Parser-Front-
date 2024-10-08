@@ -1,21 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Suspense, useState, useEffect } from 'react';
 import Table from "../components/Table/Table";
 import Loading from '../components/Loading';
 import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
 import { transformData } from '../utils/transformData';
-import { useStore } from '../store/store';
 import Period from '../components/Period';
-import ErrorBoundary from '../components/ErrorBoundary';
-
-//zabil build sobrat'
+import ColumnVisibilityToggle from '../components/ColumnVisibilityToggle';
+import Box from '@mui/joy/Box'
+import { useColorScheme } from '@mui/joy/styles';
 
 const Graph = React.lazy(() => import('../components/Graph'))
 
 const MainPage = () => {
+  const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
   const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
   const [searchQuery, setSearchQuery] = useState(''); // Добавляем состояние для поискового запроса
-  const theme = useStore((state: { theme: any; }) => state.theme);
+  const palette = useColorScheme();
+  const isDarkMode = palette?.mode === 'dark';
+
+  const columns = [
+    { id: 'model', label: 'Model' },
+    { id: 'provider', label: 'Provider' },
+    { id: 'input', label: 'Input' },
+    { id: 'output', label: 'Output' },
+  ]
 
   useEffect(() => {
     let isMounted = true; // флаг для отслеживания состояния монтирования
@@ -57,22 +66,75 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <Box
+      sx={{
+        minHeight: '100vh', // `min-h-screen`
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: isDarkMode ? 'black' : 'white',
+        color: isDarkMode ? 'white' : 'black',
+      }}
+    >
       <Suspense fallback={<Loading />}>
-        <div className="mx-0 sm:mx-10 md:mx-10 lg:mx-12 xl:mx-14 2xl:mx-14 flex flex-col justify-start w-full">
+        <Box
+          sx={{
+            marginX: {
+              xs: '0',     // `mx-0`
+              sm: '40px',  // `sm:mx-10`
+              md: '40px',  // `md:mx-10`
+              lg: '48px',  // `lg:mx-12`
+              xl: '56px',  // `xl:mx-14` и `2xl:mx-14`
+            },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            width: '100%',
+          }}
+        >
           <GraphHeader />
-          <div className='flex flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around h-1/2 w-full'>
-              <Graph />
-              <div>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: {
+                xs: 'column', // Без изменения
+                lg: 'row',   // `lg:flex-row`
+                xl: 'row',   // `xl:flex-row`
+                '2xl': 'row' // `2xl:flex-row`
+              },
+              justifyContent: 'space-around',
+              height: '50%', // `h-1/2`
+              width: '100%',
+            }}
+          >
+            <Graph />
+            <Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 3, // `gap-3` (12px)
+                  marginBottom: 3, // `mb-3`
+                }}
+              >
                 <Search onSearch={setSearchQuery} />
-                <Table data={tableData} searchQuery={searchQuery} />
-              </div>
-          </div>
+                <ColumnVisibilityToggle
+                  columns={columns}
+                  hiddenColumns={hiddenColumns}
+                  setHiddenColumns={setHiddenColumns}
+                />
+              </Box>
+              <Table
+                data={tableData}
+                searchQuery={searchQuery}
+                hiddenColumns={hiddenColumns}
+              />
+            </Box>
+          </Box>
           <Period />
-        </div>
+        </Box>
       </Suspense>
-    </div>
+    </Box>
   );
-} 
+}
 
 export default MainPage;

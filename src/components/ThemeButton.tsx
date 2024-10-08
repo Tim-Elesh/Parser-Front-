@@ -1,22 +1,26 @@
-import { useStore } from "../store/store";
-import { FaMoon } from "react-icons/fa";
-import { FaSun } from "react-icons/fa";
+import IconButton from '@mui/joy/IconButton';
+import { useColorScheme } from '@mui/joy/styles';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 
 const ThemeToggleButton = () => {
-  const theme = useStore((state: { theme: any; }) => state.theme); // Получаем текущую тему из глобального состояния
-  const setTheme = useStore((state: { setTheme: any; }) => state.setTheme); // Получаем функцию для изменения темы
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark'); // Переключаем тему
-  };
+  const { mode, setMode } = useColorScheme();
 
   return (
-    <button
-      onClick={toggleTheme}
-      className={` p-3 rounded ${theme === 'dark' ? 'bg-gray-950 text-white' : 'bg-white text-black'} cursor-pointer`}
+    <IconButton
+      onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+      variant="solid"
+      sx={{
+        bgcolor: 'primary.400',
+        '&:hover': {
+          backgroundColor: 'primary.500',
+        },
+        color: 'white',
+        transition: '0.2s',
+      }}
     >
-      {theme === 'dark' ? <FaSun /> : <FaMoon />}
-    </button>
+      {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+    </IconButton>
   );
 };
 
