@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Box } from '@mui/joy';
 import CheckIcon from '@mui/icons-material/Check';
+import { useColorScheme } from '@mui/joy/styles';
 
 interface ColumnVisibilityToggleProps {
   columns: Array<{ id: string; label: string }>;
@@ -19,6 +20,9 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
     );
   };
 
+  const  palette  = useColorScheme();
+  const isDarkMode = palette?.mode === 'dark';
+
   return (
     <Box
       sx={{
@@ -31,7 +35,6 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
           fontSize: '1rem', // 'md' в Tailwind соответствует 1rem
           paddingX: '16px', // 'px-4' в Tailwind равно 16px (4 * 4px)
           paddingY: '8px',  // 'py-2' в Tailwind равно 8px (2 * 4px)
-          border: '1px solid', // Используется значение по умолчанию для ширины бордюра
           borderRadius: '4px', // 'rounded' в Tailwind соответствует 0.25rem или 4px
           backgroundColor: 'blue.500',
           color: 'white',
@@ -52,7 +55,7 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
             position: 'absolute',
             marginTop: '8px',
             padding: '24px',
-            bgcolor: 'white',
+            bgcolor: isDarkMode ? 'black' : 'white',
             border: '1px solid',
             boxShadow: 4,
             zIndex: 10,
@@ -74,7 +77,6 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
                   fontSize: '0.875rem',    // 'text-sm' в Tailwind обычно равен 0.875rem
                   paddingX: '8px',         // 'px-2' в Tailwind равен 8px (2 * 4px)
                   paddingY: '4px',         // 'py-1' в Tailwind равен 4px (1 * 4px)
-                  border: '1px solid',     // Стандартное оформление обводки
                   borderRadius: '4px',     // 'rounded' в Tailwind равен 4px или 0.25rem
                   backgroundColor: 'grey.200', // 'bg-gray-200' в Tailwind
                   '&:hover': {

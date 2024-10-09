@@ -1,10 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useEffect } from 'react';
-import { useTable, usePagination, useSortBy, Column, Row, HeaderGroup, TableInstance } from 'react-table';
-import TableData from '../../types/TableData';
-import { ArrowUpward, ArrowDownward , Height} from '@mui/icons-material'
-import Pagination from '../Pagination';
-import { Box , Table ,TableHead, TableBody, TableRow, TableCell  } from '@mui/joy'
+import { useMemo, useEffect } from "react";
+import {
+  useTable,
+  usePagination,
+  useSortBy,
+  Column,
+  Row,
+  HeaderGroup,
+  TableInstance,
+} from "react-table";
+import TableData from "../../types/TableData";
+import { ArrowUpward, ArrowDownward, Height } from "@mui/icons-material";
+import { Box } from "@mui/joy";
+import Table from "@mui/joy/Table";
+import { useColorScheme } from '@mui/joy/styles';
+
 
 interface GroupedTableData extends TableData {
   isGroup?: boolean;
@@ -24,21 +33,27 @@ type TableInstanceWithPagination<T extends object> = TableInstance<T> & {
   state: { pageIndex: number; pageSize: number };
 };
 
-const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: string[] }> = ({ data, searchQuery, hiddenColumns }) => {
-
+const TableComponent: React.FC<{
+  data: TableData[];
+  searchQuery: string;
+  hiddenColumns: string[];
+}> = ({ data, searchQuery, hiddenColumns }) => {
   useEffect(() => {
-    console.log('Table data:', data);
+    console.log("Table data:", data);
   }, [data]);
 
+  const  palette  = useColorScheme();
+  const isDarkMode = palette?.mode === 'dark';
+
   const truncateModelName = (name: string) => {
-    return name.length > 10 ? name.substring(0, 10) + '...' : name;
+    return name.length > 10 ? name.substring(0, 10) + "..." : name;
   };
 
   const findDuplicates = (data: TableData[]) => {
     const duplicates: Record<string, TableData[]> = {};
     const uniqueData: TableData[] = [];
 
-    data.forEach(row => {
+    data.forEach((row) => {
       const key = `${row.model}`;
 
       if (!duplicates[key]) {
@@ -50,7 +65,7 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
     });
 
     return {
-      duplicates: Object.values(duplicates).filter(group => group.length > 1),
+      duplicates: Object.values(duplicates).filter((group) => group.length > 1),
       uniqueData,
     };
   };
@@ -58,8 +73,8 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
   const { uniqueData } = useMemo(() => findDuplicates(data), [data]);
 
   const filteredData = useMemo(() => {
-    return uniqueData.filter(row =>
-      Object.values(row).some(value =>
+    return uniqueData.filter((row) =>
+      Object.values(row).some((value) =>
         value.toString().toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
@@ -71,111 +86,198 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
 
   const columns: Column<TableData>[] = useMemo(
     () => [
-      { Header: 'Model', accessor: 'model' },
-      { Header: 'Provider', accessor: 'provider' },
-      { Header: 'Input', accessor: 'input' , sortType: 'basic', },
-      { Header: 'Output', accessor: 'output' , sortType: 'basic', },
+      { Header: "Model", accessor: "model" },
+      { Header: "Provider", accessor: "provider" },
+      { Header: "Input", accessor: "input", sortType: "basic" },
+      { Header: "Output", accessor: "output", sortType: "basic" },
     ],
     []
   );
 
   const visibleColumns = useMemo(() => {
-    return columns.filter(column => !hiddenColumns.includes(column.accessor as string));
+    return columns.filter(
+      (column) => !hiddenColumns.includes(column.accessor as string)
+    );
   }, [columns, hiddenColumns]);
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns: visibleColumns,
-      data: combinedData,
-      initialState: { pageIndex: 0, pageSize: 10 }, // Дополнительно добавленный multiSort после настройки
-      disableMultiSort: false, // Включение многоколоночной сортировки
-    },
-    useSortBy,
-    usePagination
-  ) as TableInstanceWithPagination<GroupedTableData>;
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
+    useTable(
+      {
+        columns: visibleColumns,
+        data: combinedData,
+        initialState: { pageIndex: 0, pageSize: 10 }, // Дополнительно добавленный multiSort после настройки
+        disableMultiSort: false, // Включение многоколоночной сортировки
+      },
+      useSortBy,
+      usePagination
+    ) as TableInstanceWithPagination<GroupedTableData>;
 
   return (
-    <Box sx={{ overflowX: 'hidden' }}>
-      <Box sx={{}} className="min-w-full lg:w-full xl:w-2xl 2xl:w-1/2 h-96 overflow-y-auto"> {/* This div controls vertical scroll */}
-        <Table {...getTableProps()} className={`min-w-full max-[768px]:w-full lg:w-full lg:max-w-2xl xl:w-full xl:max-w-3xl 2xl:w-full 2xl:max-w-4xl table-fixed divide-y divide-gray-200 bg-white text-black`}>
-          <TableHead className={`bg-gray-50 sticky top-0`}> {/* Make header sticky */}
+    <Box
+      sx={{
+        overflowX: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          minWidth: "100%",
+          height: "24rem",
+          overflowY: "auto",
+          width: {
+            lg: "100%",
+            xl: "768px",
+            "2xl": "50%",
+          },
+        }}
+      >
+        <Table
+          {...getTableProps()}
+          sx={{
+            minWidth: "100%", // Аналогично `min-w-full`
+            maxWidth: {
+              xs: "100%", // `w-full` до 768px
+              lg: "672px", // `lg:max-w-2xl` (2xl в Tailwind соответствует около 672px)
+              xl: "768px", // `xl:max-w-3xl` (3xl в Tailwind около 768px)
+              "2xl": "1024px", // `2xl:max-w-4xl` (4xl соответствует около 1024px)
+            },
+            tableLayout: "fixed", // `table-fixed`
+            borderCollapse: "collapse",
+            backgroundColor: isDarkMode ? "black" : "white", // `bg-white`
+            color: isDarkMode ? "white" : "black", // `text-black`
+          }}
+        >
+          <Box
+            component="thead"
+            sx={{
+              backgroundColor: "grey.50", // `bg-gray-50` в Tailwind соответствует светло-серому цвету
+              position: "sticky", // `sticky`
+              top: 0, // `top-0`
+              zIndex: 1, // Укажите zIndex, чтобы элемент находился на верхних уровнях наложения
+            }}
+          >
             {headerGroups.map((headerGroup: HeaderGroup<GroupedTableData>) => (
-              <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => {
-                  const sortingColumn = column as Column<GroupedTableData> & UseSortByColumnProps<GroupedTableData>;
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => {
+                  const sortingColumn = column as Column<GroupedTableData> &
+                    UseSortByColumnProps<GroupedTableData>;
                   return (
-                    <TableCell
-                      {...sortingColumn.getHeaderProps(sortingColumn.getSortByToggleProps())}
-                      className={`w-1/4 px-1 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase text-gray-500`}
+                    <th
+                      {...sortingColumn.getHeaderProps(
+                        sortingColumn.getSortByToggleProps()
+                      )}
+                      sx={{
+                        width: "25%", // `w-1/4` соответствует 25% ширины
+                        paddingX: {
+                          xs: "4px", // `px-1` соответствует 4px
+                          sm: "16px", // `sm:px-4` соответствует 16px
+                          md: "24px", // `md:px-6` соответствует 24px
+                        },
+                        paddingY: {
+                          xs: "8px", // `py-2` соответствует 8px
+                          sm: "12px", // `sm:py-3` соответствует 12px
+                        },
+                        textAlign: "left", // Склонение текста влево `text-left`
+                        fontSize: "0.75rem", // `text-xs` соответствует примерно 0.75rem или 12px
+                        fontWeight: "600", // `font-semibold` обычно соответствует 600 в системе стилей
+                        textTransform: "uppercase", // `uppercase` преобразует текст в верхний регистр
+                        color: "grey.500", // `text-gray-500` в MUI будет примерно соответствовать `grey.500`
+                      }}
                     >
-                      <Box className="flex items-center">
-                        {sortingColumn.render('Header')}
-                        <Box className="text-gray-500 ml-0 sm:ml-2 md:ml-2 lg:ml-2 xl:ml-2 2xl:ml-2">
-                          {sortingColumn.isSorted
-                            ? sortingColumn.isSortedDesc
-                              ? <ArrowDownward  />
-                              : <ArrowUpward />
-                            : <Height />}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {sortingColumn.render("Header")}
+                        <Box
+                          sx={{
+                            color: "grey.500", // Соответствует `text-gray-500` для цвета текста
+                            marginLeft: {
+                              xs: 0, // `ml-0` для самых маленьких экранов
+                              sm: "8px", // `sm:ml-2` это 8px отступ для экранов от 640px и выше (по умолчанию Tailwind)
+                              md: "8px", // `md:ml-2` продолжает 8px для медиа-области от 768px и выше
+                              lg: "8px", // `lg:ml-2` аналогично для больших экранов (от 1024px)
+                              xl: "8px", // `xl:ml-2` для ещё больших дисплеев (от 1280px)
+                              "2xl": "8px", // `2xl:ml-2` для разрешений от 1536px
+                            },
+                          }}
+                        >
+                          {sortingColumn.isSorted ? (
+                            sortingColumn.isSortedDesc ? (
+                              <ArrowDownward />
+                            ) : (
+                              <ArrowUpward />
+                            )
+                          ) : (
+                            <Height />
+                          )}
                         </Box>
                       </Box>
-                    </TableCell>
+                    </th>
                   );
                 })}
-              </TableRow>
+              </tr>
             ))}
-          </TableHead>
-          <TableBody {...getTableBodyProps()} className={` bg-white`}>
+          </Box>
+          <Box
+            component="tbody"
+            {...getTableBodyProps()}
+            sx={{
+              bgColor: "white",
+            }}
+          >
             {page.map((row: Row<GroupedTableData>) => {
               prepareRow(row);
               return (
-                <TableRow {...row.getRowProps()} className={` hover:bg-gray-100 duration-200 `}>
-                  {row.cells.map(cell => {
-                    const cellValue = cell.column.id === 'model' ? truncateModelName(cell.value) : cell.render('Cell');
+                <Box
+                  component="tr"
+                  {...row.getRowProps()}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "grey.100", // Фон при наведении
+                    },
+                    transition: "background-color 200ms ease-in-out", // Переход для эффекта наведения
+                  }}
+                >
+                  {row.cells.map((cell) => {
+                    const cellValue =
+                      cell.column.id === "model"
+                        ? truncateModelName(cell.value)
+                        : cell.render("Cell");
                     return (
-                      <td
+                      <Box
+                        component="td"
                         {...cell.getCellProps()}
-                        className={`px-2 py-1.5 sm:px-4 md:px-6 sm:py-2 text-xs sm:text-sm text-gray-900`}
+                        sx={{
+                          paddingX: {
+                            xs: "8px", // `px-2` соответствует 8px
+                            sm: "16px", // `sm:px-4` соответствует 16px
+                            md: "24px", // `md:px-6` соответствует 24px
+                          },
+                          paddingY: {
+                            xs: "6px", // `py-1.5` соответствует 6px (1.5 * 4px)
+                            sm: "8px", // `sm:py-2` соответствует 8px
+                          },
+                          fontSize: {
+                            xs: "0.75rem", // `text-xs` соответствует примерно 0.75rem или 12px
+                            sm: "0.875rem", // `sm:text-sm` соответствует примерно 0.875rem или 14px
+                          },
+                          color: "grey.900", // `text-gray-900` для черного текста с оттенком серого
+                        }}
                       >
                         {cellValue}
-                      </td>
+                      </Box>
                     );
                   })}
-                </TableRow>
+                </Box>
               );
             })}
-          </TableBody>
+          </Box>
         </Table>
       </Box>
-
-      <Pagination
-        gotoPage={gotoPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        pageCount={pageCount}
-        pageIndex={pageIndex}
-        pageOptions={pageOptions}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-      />
     </Box>
   );
-}
+};
 
-export default Table;
+export default TableComponent;

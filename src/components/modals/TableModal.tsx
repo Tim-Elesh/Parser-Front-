@@ -1,47 +1,32 @@
-import React from 'react';
-import { FaTimes } from 'react-icons/fa';
-import {Button, Box} from '@mui/joy';
+import * as React from 'react';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Typography from '@mui/joy/Typography';
+import Button from '@mui/joy/Button';
 
-interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-  }
+function MyModal() {
+  const [open, setOpen] = React.useState(false);
 
-const TableModal: React.FC<ModalProps> = ({isOpen , onClose}) => {
-  if (!isOpen) return null;
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-    return(
-        <>
-         <Box sx={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-         }}>
-            <Box sx={{bgcolor: 'white', p: 6, position: 'relative'}}>
-                <Button
-                onClick={onClose}
-                sx={{
-                  position: 'absolute',
-                  top: '8px',
-                  right: '8px',
-                  color: 'grey.500',
-                  '&:hover': {
-                    color: 'grey.700',
-                  },
-                }}
-                >
-                  <FaTimes />
-                </Button>
-              </Box>
-          </Box>
-        </>
-    )
+  return (
+    <div>
+      <Button onClick={handleOpen}>Открыть модальное окно</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <ModalDialog>
+          <Typography component="h2">Заголовок модального окна</Typography>
+          <Typography component="p">
+            Здесь будет отображаться информация из вашей таблицы.
+          </Typography>
+          <Button onClick={handleClose}>Закрыть</Button>
+        </ModalDialog>
+      </Modal>
+    </div>
+  );
 }
 
-export default TableModal;
+export default MyModal;
