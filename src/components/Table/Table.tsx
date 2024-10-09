@@ -4,6 +4,7 @@ import { useTable, usePagination, useSortBy, Column, Row, HeaderGroup, TableInst
 import TableData from '../../types/TableData';
 import { ArrowUpward, ArrowDownward , Height} from '@mui/icons-material'
 import Pagination from '../Pagination';
+import { Box , Table ,TableHead, TableBody, TableRow, TableCell  } from '@mui/joy'
 
 interface GroupedTableData extends TableData {
   isGroup?: boolean;
@@ -72,8 +73,8 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
     () => [
       { Header: 'Model', accessor: 'model' },
       { Header: 'Provider', accessor: 'provider' },
-      { Header: 'Input', accessor: 'input' },
-      { Header: 'Output', accessor: 'output' },
+      { Header: 'Input', accessor: 'input' , sortType: 'basic', },
+      { Header: 'Output', accessor: 'output' , sortType: 'basic', },
     ],
     []
   );
@@ -109,40 +110,40 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
   ) as TableInstanceWithPagination<GroupedTableData>;
 
   return (
-    <div className="overflow-x-hidden">
-      <div className="min-w-full lg:w-full xl:w-2xl 2xl:w-1/2 h-96 overflow-y-auto"> {/* This div controls vertical scroll */}
-        <table {...getTableProps()} className={`min-w-full max-[768px]:w-full lg:w-full lg:max-w-2xl xl:w-full xl:max-w-3xl 2xl:w-full 2xl:max-w-4xl table-fixed divide-y divide-gray-200 bg-white text-black`}>
-          <thead className={`bg-gray-50 sticky top-0`}> {/* Make header sticky */}
+    <Box sx={{ overflowX: 'hidden' }}>
+      <Box sx={{}} className="min-w-full lg:w-full xl:w-2xl 2xl:w-1/2 h-96 overflow-y-auto"> {/* This div controls vertical scroll */}
+        <Table {...getTableProps()} className={`min-w-full max-[768px]:w-full lg:w-full lg:max-w-2xl xl:w-full xl:max-w-3xl 2xl:w-full 2xl:max-w-4xl table-fixed divide-y divide-gray-200 bg-white text-black`}>
+          <TableHead className={`bg-gray-50 sticky top-0`}> {/* Make header sticky */}
             {headerGroups.map((headerGroup: HeaderGroup<GroupedTableData>) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => {
                   const sortingColumn = column as Column<GroupedTableData> & UseSortByColumnProps<GroupedTableData>;
                   return (
-                    <th
+                    <TableCell
                       {...sortingColumn.getHeaderProps(sortingColumn.getSortByToggleProps())}
                       className={`w-1/4 px-1 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-semibold uppercase text-gray-500`}
                     >
-                      <div className="flex items-center">
+                      <Box className="flex items-center">
                         {sortingColumn.render('Header')}
-                        <span className="text-gray-500 ml-0 sm:ml-2 md:ml-2 lg:ml-2 xl:ml-2 2xl:ml-2">
+                        <Box className="text-gray-500 ml-0 sm:ml-2 md:ml-2 lg:ml-2 xl:ml-2 2xl:ml-2">
                           {sortingColumn.isSorted
                             ? sortingColumn.isSortedDesc
                               ? <ArrowDownward  />
                               : <ArrowUpward />
                             : <Height />}
-                        </span>
-                      </div>
-                    </th>
+                        </Box>
+                      </Box>
+                    </TableCell>
                   );
                 })}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody {...getTableBodyProps()} className={` bg-white`}>
+          </TableHead>
+          <TableBody {...getTableBodyProps()} className={` bg-white`}>
             {page.map((row: Row<GroupedTableData>) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} className={` hover:bg-gray-100 duration-200 `}>
+                <TableRow {...row.getRowProps()} className={` hover:bg-gray-100 duration-200 `}>
                   {row.cells.map(cell => {
                     const cellValue = cell.column.id === 'model' ? truncateModelName(cell.value) : cell.render('Cell');
                     return (
@@ -154,12 +155,12 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
                       </td>
                     );
                   })}
-                </tr>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Box>
 
       <Pagination
         gotoPage={gotoPage}
@@ -173,7 +174,7 @@ const Table: React.FC<{ data: TableData[]; searchQuery: string; hiddenColumns: s
         pageSize={pageSize}
         setPageSize={setPageSize}
       />
-    </div>
+    </Box>
   );
 }
 

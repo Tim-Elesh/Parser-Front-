@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Input} from '@mui/joy'
+import { useColorScheme } from '@mui/joy/styles';
 
 type SearchProps = {
     onSearch: (query: string) => void;
@@ -10,6 +11,9 @@ type SearchProps = {
 
 export default function Search({ onSearch, initialQuery = '' }: SearchProps) {
     const [query, setQuery] = useState(initialQuery);
+    const palette = useColorScheme();
+    const isDarkMode = palette?.mode === 'dark';
+
 
     useEffect(() => {
         onSearch(query);
@@ -21,8 +25,8 @@ export default function Search({ onSearch, initialQuery = '' }: SearchProps) {
                 display: 'flex',
                 alignItems: 'center',
                 width: '90%',
-                backgroundColor: 'white',
-                color: 'black',
+                backgroundColor: isDarkMode ? 'black' : 'white',
+                color: isDarkMode ? 'white' : 'black',
             }}
         >
             <Box
@@ -51,15 +55,21 @@ export default function Search({ onSearch, initialQuery = '' }: SearchProps) {
                         border: `1px solid #d1d5db`, // `border-gray-800` или `border-gray-300`
                         borderRadius: '4px', // `rounded-md`
                         boxShadow: '0 1px 2px rgb(0 0 0 / 0.05)', // `shadow-sm`, может быть адаптировано из темы
-                        backgroundColor:  'white',
-                        color: 'black',
+                        backgroundColor: isDarkMode ? 'black' : 'white',
+                        color: isDarkMode ? 'white' : 'black',
                         '&:focus': {
                             outline: 'none',
-                            boxShadow: `0 0 0 4px #c3cde6`, // `focus:ring-slate-800` или `focus:ring-indigo-200`
+                            boxShadow: `0 0 0 6px #c3cde6`, // `focus:ring-slate-800` или `focus:ring-indigo-200`
                         },
                     }}
                 />
-                <SearchIcon sx={{ position: 'absolute', left: '12px', color: 'gray.400' }} />
+                <SearchIcon 
+                    sx={{ 
+                        position: 'absolute', 
+                        left: '12px', 
+                        color: isDarkMode ? 'white' : 'gray.500' 
+                        }} 
+                />
             </Box>
         </Box>
     );
