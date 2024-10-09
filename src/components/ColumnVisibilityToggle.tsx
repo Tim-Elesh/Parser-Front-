@@ -20,13 +20,17 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
     );
   };
 
-  const  palette  = useColorScheme();
+  const palette = useColorScheme();
   const isDarkMode = palette?.mode === 'dark';
 
   return (
     <Box
       sx={{
-        position: 'relative'
+        position: 'relative',
+        width: '100px',
+        '@media (max-width: 430px)': {
+          display: 'none', // Скрыть компонент при ширине менее 430 пикселей
+        },
       }}
     >
       <Button
@@ -74,6 +78,10 @@ const ColumnVisibilityToggle: React.FC<ColumnVisibilityToggleProps> = ({ columns
                 onClick={() => toggleColumnVisibility(column.id)}
                 sx={{
                   opacity: hiddenColumns.includes(column.id) ? 0.5 : 1, // Установить opacity для скрытых колонок
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '4px',
                   fontSize: '0.875rem',    // 'text-sm' в Tailwind обычно равен 0.875rem
                   paddingX: '8px',         // 'px-2' в Tailwind равен 8px (2 * 4px)
                   paddingY: '4px',         // 'py-1' в Tailwind равен 4px (1 * 4px)

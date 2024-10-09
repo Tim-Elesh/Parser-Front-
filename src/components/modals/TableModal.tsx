@@ -4,7 +4,15 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import Typography from '@mui/joy/Typography';
 import Button from '@mui/joy/Button';
 
-function MyModal() {
+interface MyModalProps {
+  open: boolean;
+  handleClose: () => void;
+  rowData: any;  // данные строки, которые будем передавать
+}
+
+const MyModal: React.FC<MyModalProps> = ({ open, handleClose, rowData }) => {
+  if (!rowData) return null;
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);

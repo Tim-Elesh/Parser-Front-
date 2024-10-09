@@ -11,11 +11,8 @@ const ThemeToggleButton = () => {
       onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
       variant="solid"
       sx={{
-        bgcolor: 'primary.400',
-        '&:hover': {
-          backgroundColor: 'primary.500',
-        },
-        color: 'white',
+        bgcolor: mode === 'light' ? 'black' : 'white',
+        color: mode === 'light' ? 'white' : 'black',
         transition: '0.2s',
       }}
     >

@@ -10,6 +10,7 @@ const GraphHeader = () => {
           width: '100%', // `w-full`
           justifyContent: 'space-between',
           alignItems: 'center',
+          alignContent: 'center',
           my: 3, // `my-3` (вертикальные отступы по 12px сверху и снизу)
         }}
       >

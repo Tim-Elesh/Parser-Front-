@@ -5,7 +5,6 @@ import Loading from '../components/Loading';
 import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
 import { transformData } from '../utils/transformData';
-import Period from '../components/Period';
 import ColumnVisibilityToggle from '../components/ColumnVisibilityToggle';
 import Box from '@mui/joy/Box'
 import { useColorScheme } from '@mui/joy/styles';
@@ -102,7 +101,7 @@ const MainPage = () => {
                 xl: 'row',   // `xl:flex-row`
                 '2xl': 'row' // `2xl:flex-row`
               },
-              justifyContent: 'space-around',
+              justifyContent: 'space-between',
               height: '50%', // `h-1/2`
               width: '100%',
             }}
@@ -130,7 +129,6 @@ const MainPage = () => {
               />
             </Box>
           </Box>
-          <Period />
         </Box>
       </Suspense>
     </Box>

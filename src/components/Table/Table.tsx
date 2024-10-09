@@ -1,12 +1,10 @@
 import { useMemo, useEffect } from "react";
 import {
   useTable,
-  usePagination,
   useSortBy,
   Column,
   Row,
   HeaderGroup,
-  TableInstance,
 } from "react-table";
 import TableData from "../../types/TableData";
 import { ArrowUpward, ArrowDownward, Height } from "@mui/icons-material";
@@ -20,19 +18,6 @@ interface GroupedTableData extends TableData {
   groupItems?: TableData[];
 }
 
-type TableInstanceWithPagination<T extends object> = TableInstance<T> & {
-  page: Array<Row<T>>;
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  pageOptions: number[];
-  pageCount: number;
-  gotoPage: (page: number) => void;
-  nextPage: () => void;
-  previousPage: () => void;
-  setPageSize: (size: number) => void;
-  state: { pageIndex: number; pageSize: number };
-};
-
 const TableComponent: React.FC<{
   data: TableData[];
   searchQuery: string;
@@ -42,7 +27,7 @@ const TableComponent: React.FC<{
     console.log("Table data:", data);
   }, [data]);
 
-  const  palette  = useColorScheme();
+  const palette = useColorScheme();
   const isDarkMode = palette?.mode === 'dark';
 
   const truncateModelName = (name: string) => {
@@ -100,17 +85,16 @@ const TableComponent: React.FC<{
     );
   }, [columns, hiddenColumns]);
 
-  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
       {
         columns: visibleColumns,
         data: combinedData,
-        initialState: { pageIndex: 0, pageSize: 10 }, // Дополнительно добавленный multiSort после настройки
-        disableMultiSort: false, // Включение многоколоночной сортировки
+        initialState: { pageIndex: 0 }, 
+        disableMultiSort: false,
       },
-      useSortBy,
-      usePagination
-    ) as TableInstanceWithPagination<GroupedTableData>;
+      useSortBy
+    );
 
   return (
     <Box
@@ -133,26 +117,27 @@ const TableComponent: React.FC<{
         <Table
           {...getTableProps()}
           sx={{
-            minWidth: "100%", // Аналогично `min-w-full`
+            minWidth: "100%",
             maxWidth: {
-              xs: "100%", // `w-full` до 768px
-              lg: "672px", // `lg:max-w-2xl` (2xl в Tailwind соответствует около 672px)
-              xl: "768px", // `xl:max-w-3xl` (3xl в Tailwind около 768px)
-              "2xl": "1024px", // `2xl:max-w-4xl` (4xl соответствует около 1024px)
+              xs: "100%",
+              lg: "672px",
+              xl: "768px",
+              "2xl": "1024px",
+              "3xl": "1270px"
             },
-            tableLayout: "fixed", // `table-fixed`
+            tableLayout: "fixed",
             borderCollapse: "collapse",
-            backgroundColor: isDarkMode ? "black" : "white", // `bg-white`
-            color: isDarkMode ? "white" : "black", // `text-black`
+            backgroundColor: isDarkMode ? "black" : "white",
+            color: isDarkMode ? "white" : "black",
           }}
         >
           <Box
             component="thead"
             sx={{
-              backgroundColor: "grey.50", // `bg-gray-50` в Tailwind соответствует светло-серому цвету
-              position: "sticky", // `sticky`
-              top: 0, // `top-0`
-              zIndex: 1, // Укажите zIndex, чтобы элемент находился на верхних уровнях наложения
+              backgroundColor: "grey.50",
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
             }}
           >
             {headerGroups.map((headerGroup: HeaderGroup<GroupedTableData>) => (
@@ -166,21 +151,21 @@ const TableComponent: React.FC<{
                         sortingColumn.getSortByToggleProps()
                       )}
                       sx={{
-                        width: "25%", // `w-1/4` соответствует 25% ширины
+                        width: "25%",
                         paddingX: {
-                          xs: "4px", // `px-1` соответствует 4px
-                          sm: "16px", // `sm:px-4` соответствует 16px
-                          md: "24px", // `md:px-6` соответствует 24px
+                          xs: "4px",
+                          sm: "16px",
+                          md: "24px",
                         },
                         paddingY: {
-                          xs: "8px", // `py-2` соответствует 8px
-                          sm: "12px", // `sm:py-3` соответствует 12px
+                          xs: "8px",
+                          sm: "12px",
                         },
-                        textAlign: "left", // Склонение текста влево `text-left`
-                        fontSize: "0.75rem", // `text-xs` соответствует примерно 0.75rem или 12px
-                        fontWeight: "600", // `font-semibold` обычно соответствует 600 в системе стилей
-                        textTransform: "uppercase", // `uppercase` преобразует текст в верхний регистр
-                        color: "grey.500", // `text-gray-500` в MUI будет примерно соответствовать `grey.500`
+                        textAlign: "left",
+                        fontSize: "0.75rem",
+                        fontWeight: "600",
+                        textTransform: "uppercase",
+                        color: "grey.500",
                       }}
                     >
                       <Box
@@ -192,14 +177,14 @@ const TableComponent: React.FC<{
                         {sortingColumn.render("Header")}
                         <Box
                           sx={{
-                            color: "grey.500", // Соответствует `text-gray-500` для цвета текста
+                            color: "grey.500",
                             marginLeft: {
-                              xs: 0, // `ml-0` для самых маленьких экранов
-                              sm: "8px", // `sm:ml-2` это 8px отступ для экранов от 640px и выше (по умолчанию Tailwind)
-                              md: "8px", // `md:ml-2` продолжает 8px для медиа-области от 768px и выше
-                              lg: "8px", // `lg:ml-2` аналогично для больших экранов (от 1024px)
-                              xl: "8px", // `xl:ml-2` для ещё больших дисплеев (от 1280px)
-                              "2xl": "8px", // `2xl:ml-2` для разрешений от 1536px
+                              xs: 0,
+                              sm: "8px",
+                              md: "8px",
+                              lg: "8px",
+                              xl: "8px",
+                              "2xl": "8px",
                             },
                           }}
                         >
@@ -227,7 +212,7 @@ const TableComponent: React.FC<{
               bgColor: "white",
             }}
           >
-            {page.map((row: Row<GroupedTableData>) => {
+            {rows.map((row: Row<GroupedTableData>) => {
               prepareRow(row);
               return (
                 <Box
@@ -235,9 +220,9 @@ const TableComponent: React.FC<{
                   {...row.getRowProps()}
                   sx={{
                     "&:hover": {
-                      backgroundColor: "grey.100", // Фон при наведении
+                      backgroundColor: "grey.100",
                     },
-                    transition: "background-color 200ms ease-in-out", // Переход для эффекта наведения
+                    transition: "background-color 200ms ease-in-out",
                   }}
                 >
                   {row.cells.map((cell) => {
@@ -251,19 +236,19 @@ const TableComponent: React.FC<{
                         {...cell.getCellProps()}
                         sx={{
                           paddingX: {
-                            xs: "8px", // `px-2` соответствует 8px
-                            sm: "16px", // `sm:px-4` соответствует 16px
-                            md: "24px", // `md:px-6` соответствует 24px
+                            xs: "8px",
+                            sm: "16px",
+                            md: "24px",
                           },
                           paddingY: {
-                            xs: "6px", // `py-1.5` соответствует 6px (1.5 * 4px)
-                            sm: "8px", // `sm:py-2` соответствует 8px
+                            xs: "6px",
+                            sm: "8px",
                           },
                           fontSize: {
-                            xs: "0.75rem", // `text-xs` соответствует примерно 0.75rem или 12px
-                            sm: "0.875rem", // `sm:text-sm` соответствует примерно 0.875rem или 14px
+                            xs: "0.75rem",
+                            sm: "0.875rem",
                           },
-                          color: "grey.900", // `text-gray-900` для черного текста с оттенком серого
+                          color: "grey.900",
                         }}
                       >
                         {cellValue}
