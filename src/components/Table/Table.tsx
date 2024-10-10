@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import {
   useTable,
   useSortBy,
@@ -11,6 +11,7 @@ import { ArrowUpward, ArrowDownward, Height } from "@mui/icons-material";
 import { Box } from "@mui/joy";
 import Table from "@mui/joy/Table";
 import { useColorScheme } from '@mui/joy/styles';
+import MyModal from "../modals/TableModal";
 
 
 interface GroupedTableData extends TableData {
@@ -23,9 +24,15 @@ const TableComponent: React.FC<{
   searchQuery: string;
   hiddenColumns: string[];
 }> = ({ data, searchQuery, hiddenColumns }) => {
+
+
   useEffect(() => {
     console.log("Table data:", data);
   }, [data]);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState<null | TableData>(null);
+
 
   const palette = useColorScheme();
   const isDarkMode = palette?.mode === 'dark';
@@ -96,12 +103,23 @@ const TableComponent: React.FC<{
       useSortBy
     );
 
+
+    const handleRowClick = (rowData: TableData) => {
+      setSelectedRowData(rowData);
+      setModalOpen(true);
+    };
+
   return (
     <Box
       sx={{
         overflowX: "hidden",
       }}
     >
+      <MyModal 
+        open={modalOpen} 
+        handleClose={() => setModalOpen(false)} 
+        rowData={selectedRowData}
+      />
       <Box
         sx={{
           minWidth: "100%",
@@ -218,6 +236,7 @@ const TableComponent: React.FC<{
                 <Box
                   component="tr"
                   {...row.getRowProps()}
+                  onClick={() => handleRowClick(row.original)}
                   sx={{
                     "&:hover": {
                       backgroundColor: "grey.100",
