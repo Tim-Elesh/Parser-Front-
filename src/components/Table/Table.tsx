@@ -1,18 +1,11 @@
 import { useMemo, useEffect, useState } from "react";
-import {
-  useTable,
-  useSortBy,
-  Column,
-  Row,
-  HeaderGroup,
-} from "react-table";
+import { useTable, useSortBy, Column, Row, HeaderGroup } from "react-table";
 import TableData from "../../types/TableData";
 import { ArrowUpward, ArrowDownward, Height } from "@mui/icons-material";
 import { Box } from "@mui/joy";
 import Table from "@mui/joy/Table";
-import { useColorScheme } from '@mui/joy/styles';
+import { useColorScheme } from "@mui/joy/styles";
 import MyModal from "../modals/TableModal";
-
 
 interface GroupedTableData extends TableData {
   isGroup?: boolean;
@@ -24,18 +17,17 @@ const TableComponent: React.FC<{
   searchQuery: string;
   hiddenColumns: string[];
 }> = ({ data, searchQuery, hiddenColumns }) => {
-
-
   useEffect(() => {
     console.log("Table data:", data);
   }, [data]);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedRowData, setSelectedRowData] = useState<null | TableData>(null);
-
+  const [selectedRowData, setSelectedRowData] = useState<null | TableData>(
+    null
+  );
 
   const palette = useColorScheme();
-  const isDarkMode = palette?.mode === 'dark';
+  const isDarkMode = palette?.mode === "dark";
 
   const truncateModelName = (name: string) => {
     return name.length > 10 ? name.substring(0, 10) + "..." : name;
@@ -82,6 +74,8 @@ const TableComponent: React.FC<{
       { Header: "Provider", accessor: "provider" },
       { Header: "Input", accessor: "input", sortType: "basic" },
       { Header: "Output", accessor: "output", sortType: "basic" },
+      { Header: "Bench", accessor: "bench", sortType: "basic" },
+      { Header: "Value", accessor: "value", sortType: "basic" },
     ],
     []
   );
@@ -97,17 +91,16 @@ const TableComponent: React.FC<{
       {
         columns: visibleColumns,
         data: combinedData,
-        initialState: { pageIndex: 0 }, 
+        initialState: { pageIndex: 0 },
         disableMultiSort: false,
       },
       useSortBy
     );
 
-
-    const handleRowClick = (rowData: TableData) => {
-      setSelectedRowData(rowData);
-      setModalOpen(true);
-    };
+  const handleRowClick = (rowData: TableData) => {
+    setSelectedRowData(rowData);
+    setModalOpen(true);
+  };
 
   return (
     <Box
@@ -115,9 +108,9 @@ const TableComponent: React.FC<{
         overflowX: "hidden",
       }}
     >
-      <MyModal 
-        open={modalOpen} 
-        handleClose={() => setModalOpen(false)} 
+      <MyModal
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
         rowData={selectedRowData}
       />
       <Box
@@ -141,7 +134,7 @@ const TableComponent: React.FC<{
               lg: "672px",
               xl: "768px",
               "2xl": "1024px",
-              "3xl": "1270px"
+              "3xl": "1270px",
             },
             tableLayout: "fixed",
             borderCollapse: "collapse",

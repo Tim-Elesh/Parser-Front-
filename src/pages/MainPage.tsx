@@ -23,44 +23,56 @@ const MainPage = () => {
     { id: 'provider', label: 'Provider' },
     { id: 'input', label: 'Input' },
     { id: 'output', label: 'Output' },
+    { id: 'bench', label: 'Bench' },
+    { id: 'value', label: 'Value' }
   ]
 
   useEffect(() => {
-    let isMounted = true; // флаг для отслеживания состояния монтирования
-
+    let isMounted = true;
+  
     const fetchData = async () => {
       try {
-        console.log('Fetching data...');
-
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
-
-        const response = await fetch(`https://tivi.aitomaton.online/date/${formattedDate}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  
+        const response1 = await fetch(`https://tivi.aitomaton.online/date/${formattedDate}`);
+        const response2 = await fetch(`https://tivi.aitomaton.online/bench/${formattedDate}`);
+        
+        if (!response1.ok || !response2.ok) {
+          throw new Error(`HTTP error! status: ${response1.status} or ${response2.status}`);
         }
+  
+        const rawData = await response1.json();
+        const benchData = await response2.json();
 
-        const rawData = await response.json();
-        console.log('Raw data:', rawData);
-
-        const transformedData = transformData(rawData);
-        console.log('Transformed data:', transformedData);
-
-        if (isMounted) { // проверка на монтирование компонента
+        const transformData = (rawData: any[], benchData: any[]) => {
+          return rawData.map((item) => {
+            const benchItem = benchData.find(bench => bench.id === item.id);
+            return {
+              ...item,
+              bench: benchItem ? benchItem.bench : null,
+              value: benchItem ? benchItem.value : null,
+            };
+          });
+        };
+  
+        const transformedData = transformData(rawData, benchData);
+  
+        if (isMounted) {
           setTableData(transformedData);
         }
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
       }
     };
-
+  
     fetchData();
-
+  
     return () => {
-      isMounted = false; // обновляем флаг при размонтировании
+      isMounted = false;
     };
   }, []);
 

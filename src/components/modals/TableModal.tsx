@@ -21,7 +21,7 @@ const MyModal: React.FC<MyModalProps> = ({ open, handleClose, rowData }) => {
       onClose={handleClose}
     >
       <ModalDialog>
-        <Typography component="h2">Заголовок модального окна</Typography>
+        <Typography component="h2">{rowData.model || "Model Name Not Available"}</Typography>
         <Typography component="p">
           <Box>
             {Object.entries(rowData).map(([key, value]) => (

@@ -3,6 +3,8 @@ interface TableData {
     provider: string;
     input: string;
     output: string;
+    bench: string;
+    value: string;
   }
 
 export default TableData;
