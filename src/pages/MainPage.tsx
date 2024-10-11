@@ -48,9 +48,12 @@ const MainPage = () => {
         const rawData = await response1.json();
         const benchData = await response2.json();
 
-        const transformData = (rawData: any[], benchData: any[]) => {
-          return rawData.map((item) => {
-            const benchItem = benchData.find(bench => bench.id === item.id);
+        console.log(Object.values(rawData));
+        
+
+        const transformData = (rawData: Object, benchData: Object) => {
+          return Object.values(rawData).map((item) => {
+            const benchItem = Object.values(benchData).find(bench => bench.id === item.id);
             return {
               ...item,
               bench: benchItem ? benchItem.bench : null,
