@@ -39,8 +39,8 @@ const useDataFetcher = () => {
                 const rawData = rawDataResponse.data;
                 const benchData = benchDataResponse.data;
 
-                console.log('rawData:', rawData);
-                console.log('benchData:', benchData);
+                console.log('rawData:', Array.isArray(rawData));
+                console.log('benchData:', Array.isArray(benchData));
 
                 if (typeof benchData !== 'object' || benchData === null) {
                     console.error('Invalid benchData format');
@@ -55,7 +55,7 @@ const useDataFetcher = () => {
                       if (Object.prototype.hasOwnProperty.call(benchData, modelName) &&
                           Array.isArray(benchData[modelName]) &&
                           benchData[modelName].length > 0) {
-                        const benchItem = benchData[modelName][0];
+                          const benchItem = benchData[modelName][0];
                   
                         if (benchItem.LLMarena !== null) {
                           benchKey = 'LLMarena';
