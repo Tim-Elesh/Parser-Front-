@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState} from 'react';
 import Table from "../components/Table/Table";
 import Loading from '../components/Loading';
 import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
-import { transformData } from '../utils/transformData';
 import ColumnVisibilityToggle from '../components/ColumnVisibilityToggle';
 import Box from '@mui/joy/Box'
 import { useColorScheme } from '@mui/joy/styles';
+import useDataFetcher from '../utils/useDataFetcher';
+
 
 const Graph = React.lazy(() => import('../components/Graph'))
 
 const MainPage = () => {
   const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
-  const [tableData, setTableData] = useState<ReturnType<typeof transformData>>([]);
   const [searchQuery, setSearchQuery] = useState(''); // Добавляем состояние для поискового запроса
   const palette = useColorScheme();
   const isDarkMode = palette?.mode === 'dark';
+  const tableData = useDataFetcher();
 
   const columns = [
     { id: 'model', label: 'Model' },
@@ -26,58 +27,6 @@ const MainPage = () => {
     { id: 'bench', label: 'Bench' },
     { id: 'value', label: 'Value' }
   ]
-
-  useEffect(() => {
-    let isMounted = true;
-  
-    const fetchData = async () => {
-      try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-  
-        const response1 = await fetch(`https://tivi.aitomaton.online/date/${formattedDate}`);
-        const response2 = await fetch(`https://tivi.aitomaton.online/bench/${formattedDate}`);
-        
-        if (!response1.ok || !response2.ok) {
-          throw new Error(`HTTP error! status: ${response1.status} or ${response2.status}`);
-        }
-  
-        const rawData = await response1.json();
-        const benchData = await response2.json();
-
-        console.log(Object.values(rawData));
-        
-
-        const transformData = (rawData: Object, benchData: Object) => {
-          return Object.values(rawData).map((item) => {
-            const benchItem = Object.values(benchData).find(bench => bench.id === item.id);
-            return {
-              ...item,
-              bench: benchItem ? benchItem.bench : null,
-              value: benchItem ? benchItem.value : null,
-            };
-          });
-        };
-  
-        const transformedData = transformData(rawData, benchData);
-  
-        if (isMounted) {
-          setTableData(transformedData);
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      }
-    };
-  
-    fetchData();
-  
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <Box
