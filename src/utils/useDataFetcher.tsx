@@ -39,6 +39,12 @@ export const transformData = (data: RawData): TableData[] => {
   return result;
 };
 
+
+export const transformBenchData = () =>{
+  return null;
+}
+
+
 function useDataFetcher() {
 
   const today = new Date();
@@ -47,7 +53,30 @@ function useDataFetcher() {
   const day = String(today.getDate()).padStart(2, '0');
   const formattedDate = `${year}-${month}-${day}`;
 
-  axios({
+
+  const firstUrl = `https://tivi.aitomaton.online/date/${formattedDate}`;
+  const secondUrl = `https://tivi.aitomaton.online/bench/${formattedDate}`;
+
+  axios.all([
+    axios.get(firstUrl, { responseType: 'json' }),
+    axios.get(secondUrl,{ responseType: 'json' })
+  ])
+  .then(axios.spread((response1, response2) => {
+    const dataFromFirstURL = transformData(response1.data);
+    const dataFromSecondURL = transformBenchData(response2.data);
+
+    console.log('Data from first URL:', dataFromFirstURL);
+    console.log('Data from second URL:', dataFromSecondURL);
+
+   
+  }))
+  .catch(function(error){
+    console.log(error);
+  })
+
+
+
+ /* axios({
     method: 'get',
     url: `https://tivi.aitomaton.online/date/${formattedDate}`,
     responseType: 'json',
@@ -74,6 +103,7 @@ function useDataFetcher() {
     .catch(function(error){
       console.log(error);
     })
+} */
 }
 
 export default useDataFetcher;
