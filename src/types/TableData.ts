@@ -1,9 +1,9 @@
 interface TableData {
   model: string;
   provider: string;
-  input: number; 
-  output: number;
-  bench: string | null;
+  input: string;
+  output: string;
+  bench: string;
   value: number | null;
 }
 
