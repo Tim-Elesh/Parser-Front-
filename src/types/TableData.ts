@@ -1,10 +1,11 @@
 interface TableData {
   model: string;
   provider: string;
-  input: string;
-  output: string;
+  input: number;
+  output: number;
   bench: string;
   value: number | null;
 }
+
 
 export default TableData;
