@@ -229,6 +229,7 @@ const TableComponent: React.FC<{
                 <Box
                   component="tr"
                   {...row.getRowProps()}
+                  key={row.id}
                   onClick={() => handleRowClick(row.original)}
                   sx={{
                     "&:hover": {
@@ -246,6 +247,7 @@ const TableComponent: React.FC<{
                       <Box
                         component="td"
                         {...cell.getCellProps()}
+                        key={cell.column.id}
                         sx={{
                           paddingX: {
                             xs: "8px",

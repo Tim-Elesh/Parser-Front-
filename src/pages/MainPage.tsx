@@ -6,8 +6,10 @@ import GraphHeader from '../components/GraphHeader';
 import Search from '../components/SearchableTable/Search';
 import ColumnVisibilityToggle from '../components/ColumnVisibilityToggle';
 import Box from '@mui/joy/Box'
+import { useEffect } from 'react';
 import { useColorScheme } from '@mui/joy/styles';
-import useDataFetcher from '../utils/useDataFetcher';
+import { handleModelData } from '../utils/fetchData';
+import TableData from '../types/TableData';
 
 
 const Graph = React.lazy(() => import('../components/Graph'))
@@ -17,7 +19,20 @@ const MainPage = () => {
   const [searchQuery, setSearchQuery] = useState(''); // Добавляем состояние для поискового запроса
   const palette = useColorScheme();
   const isDarkMode = palette?.mode === 'dark';
-  const tableData = useDataFetcher();
+  const [tableData, setTableData] = useState<TableData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await handleModelData(); // Fetch the data
+        setTableData(data); // Set the fetched data to the state
+      } catch (error) {
+        console.error('Failed to fetch table data:', error);
+      }
+    };
+    
+    fetchData(); // Invoke the async fetch function
+  }, []); // Empty dependency array ensures it only runs once on mount
 
   const columns = [
     { id: 'model', label: 'Model' },
